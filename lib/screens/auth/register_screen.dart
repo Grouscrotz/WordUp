@@ -254,7 +254,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ),
                   ),
                 ),
-                SizedBox(height: screenHeight * 0.15),
+                const SizedBox(height: 48),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -270,12 +270,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         Navigator.of(context).pop();
                       },
                       child: Text(
-                        'Войти!',
+                        'Войти',
                         style: GoogleFonts.manrope(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
                           color: const Color(0xFFDAA87D),
-                          decoration: TextDecoration.underline,
                         ),
                       ),
                     ),
