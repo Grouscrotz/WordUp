@@ -75,7 +75,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  'Добро пожаловать!\nПожалуйста, введите ваши данные для регистрации!',
+                  'Добро пожаловать! Пожалуйста,\nвведите ваши данные для регистрации!',
                   style: GoogleFonts.manrope(
                     fontSize: 16,
                     color: Colors.grey[700],
