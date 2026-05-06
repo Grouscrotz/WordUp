@@ -54,35 +54,42 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    
     return Scaffold(
       backgroundColor: const Color(0xFFFFFFFF),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 40.0),
+          padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: Form(
             key: _formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 40),
-                Text(
-                  'Регистрация',
-                  style: GoogleFonts.roboto(
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
+                SizedBox(height: screenHeight * 0.08),
+                Center(
+                  child: Text(
+                    'Регистрация',
+                    style: GoogleFonts.roboto(
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 16),
-                Text(
-                  'Добро пожаловать! Пожалуйста,\nвведите ваши данные для регистрации!',
-                  style: GoogleFonts.manrope(
-                    fontSize: 16,
-                    color: Colors.grey[700],
-                    height: 1.4,
+                Center(
+                  child: Text(
+                    'Добро пожаловать! Пожалуйста,\nвведите ваши данные для регистрации!',
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.manrope(
+                      fontSize: 16,
+                      color: Colors.grey[700],
+                      height: 1.4,
+                    ),
                   ),
                 ),
-                const SizedBox(height: 40),
+                SizedBox(height: screenHeight * 0.05),
                 TextFormField(
                   controller: _nameController,
                   style: GoogleFonts.manrope(fontSize: 16),
@@ -94,10 +101,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     prefixIcon: const Icon(Icons.person_outlined, color: Colors.grey),
                     filled: true,
-                    fillColor: const Color(0xFFBDBDBD),
+                    fillColor: const Color(0xEFEFEF),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(15),
-                      borderSide: BorderSide.none,
+                      borderSide: const BorderSide(color: Color(0xBDBDBDBD)),
                     ),
                     contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
                   ),
@@ -121,10 +128,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     prefixIcon: const Icon(Icons.email_outlined, color: Colors.grey),
                     filled: true,
-                    fillColor: const Color(0xFFBDBDBD),
+                    fillColor: const Color(0xEFEFEF),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(15),
-                      borderSide: BorderSide.none,
+                      borderSide: const BorderSide(color: Color(0xBDBDBDBD)),
                     ),
                     contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
                   ),
@@ -151,10 +158,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     prefixIcon: const Icon(Icons.lock_outlined, color: Colors.grey),
                     filled: true,
-                    fillColor: const Color(0xFFBDBDBD),
+                    fillColor: const Color(0xEFEFEF),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(15),
-                      borderSide: BorderSide.none,
+                      borderSide: const BorderSide(color: Color(0xBDBDBDBD)),
                     ),
                     contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
                     suffixIcon: IconButton(
@@ -192,10 +199,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     prefixIcon: const Icon(Icons.lock_outlined, color: Colors.grey),
                     filled: true,
-                    fillColor: const Color(0xFFBDBDBD),
+                    fillColor: const Color(0xEFEFEF),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(15),
-                      borderSide: BorderSide.none,
+                      borderSide: const BorderSide(color: Color(0xBDBDBDBD)),
                     ),
                     contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
                     suffixIcon: IconButton(
@@ -246,7 +253,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ),
                   ),
                 ),
-                const SizedBox(height: 24),
+                SizedBox(height: screenHeight * 0.08),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
