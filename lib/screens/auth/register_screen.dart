@@ -67,21 +67,27 @@ class _RegisterScreenState extends State<RegisterScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(height: screenHeight * 0.08),
-                Text(
-                  'Регистрация',
-                  style: GoogleFonts.roboto(
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
+                Padding(
+                  padding: const EdgeInsets.only(left: 4.0),
+                  child: Text(
+                    'Регистрация',
+                    style: GoogleFonts.roboto(
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 16),
-                Text(
-                  'Добро пожаловать! Пожалуйста,\nвведите ваши данные для регистрации!',
-                  style: GoogleFonts.manrope(
-                    fontSize: 16,
-                    color: Colors.grey[700],
-                    height: 1.4,
+                Padding(
+                  padding: const EdgeInsets.only(left: 4.0),
+                  child: Text(
+                    'Добро пожаловать! Пожалуйста,\nвведите ваши данные для регистрации!',
+                    style: GoogleFonts.manrope(
+                      fontSize: 16,
+                      color: Colors.grey[700],
+                      height: 1.4,
+                    ),
                   ),
                 ),
                 SizedBox(height: screenHeight * 0.05),
@@ -248,7 +254,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ),
                   ),
                 ),
-                SizedBox(height: screenHeight * 0.12),
+                SizedBox(height: screenHeight * 0.15),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
