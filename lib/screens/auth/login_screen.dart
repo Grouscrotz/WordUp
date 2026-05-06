@@ -89,10 +89,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     prefixIcon: const Icon(Icons.email_outlined, color: Colors.grey),
                     filled: true,
-                    fillColor: const Color(0xFFBDBDBD),
+                    fillColor: const Color(0xFFEFEFEF),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(15),
-                      borderSide: BorderSide.none,
+                      borderSide: const BorderSide(color: Color(0xFFBDBDBD)),
                     ),
                     contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
                   ),
@@ -119,10 +119,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     prefixIcon: const Icon(Icons.lock_outlined, color: Colors.grey),
                     filled: true,
-                    fillColor: const Color(0xFFBDBDBD),
+                    fillColor: const Color(0xFFEFEFEF),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(15),
-                      borderSide: BorderSide.none,
+                      borderSide: const BorderSide(color: Color(0xFFBDBDBD)),
                     ),
                     contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
                     suffixIcon: IconButton(
@@ -172,7 +172,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                   ),
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 48),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
