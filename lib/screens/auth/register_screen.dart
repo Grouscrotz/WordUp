@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/app_provider.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -54,29 +55,51 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Регистрация'),
-      ),
+      backgroundColor: const Color(0xFFFFFFFF),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24.0),
+          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 40.0),
           child: Form(
             key: _formKey,
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Icon(
-                  Icons.person_add_outlined,
-                  size: 60,
-                  color: Colors.blue,
+                const SizedBox(height: 40),
+                Text(
+                  'Регистрация',
+                  style: GoogleFonts.roboto(
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 16),
+                Text(
+                  'Добро пожаловать! Пожалуйста,\nвведите ваши данные для регистрации!',
+                  style: GoogleFonts.manrope(
+                    fontSize: 16,
+                    color: Colors.grey[700],
+                    height: 1.4,
+                  ),
+                ),
+                const SizedBox(height: 40),
                 TextFormField(
                   controller: _nameController,
-                  decoration: const InputDecoration(
-                    labelText: 'Имя',
-                    prefixIcon: Icon(Icons.person_outlined),
-                    border: OutlineInputBorder(),
+                  style: GoogleFonts.manrope(fontSize: 16),
+                  decoration: InputDecoration(
+                    hintText: 'Введите имя пользователя',
+                    hintStyle: GoogleFonts.manrope(
+                      fontSize: 16,
+                      color: Colors.grey[600],
+                    ),
+                    prefixIcon: const Icon(Icons.person_outlined, color: Colors.grey),
+                    filled: true,
+                    fillColor: const Color(0xFFBDBDBD),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                      borderSide: BorderSide.none,
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -85,14 +108,25 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 20),
                 TextFormField(
                   controller: _emailController,
                   keyboardType: TextInputType.emailAddress,
-                  decoration: const InputDecoration(
-                    labelText: 'Email',
-                    prefixIcon: Icon(Icons.email_outlined),
-                    border: OutlineInputBorder(),
+                  style: GoogleFonts.manrope(fontSize: 16),
+                  decoration: InputDecoration(
+                    hintText: 'Введите адрес электронной почты',
+                    hintStyle: GoogleFonts.manrope(
+                      fontSize: 16,
+                      color: Colors.grey[600],
+                    ),
+                    prefixIcon: const Icon(Icons.email_outlined, color: Colors.grey),
+                    filled: true,
+                    fillColor: const Color(0xFFBDBDBD),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                      borderSide: BorderSide.none,
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -104,19 +138,31 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 20),
                 TextFormField(
                   controller: _passwordController,
                   obscureText: _obscurePassword,
+                  style: GoogleFonts.manrope(fontSize: 16),
                   decoration: InputDecoration(
-                    labelText: 'Пароль',
-                    prefixIcon: const Icon(Icons.lock_outlined),
-                    border: const OutlineInputBorder(),
+                    hintText: 'Введите пароль',
+                    hintStyle: GoogleFonts.manrope(
+                      fontSize: 16,
+                      color: Colors.grey[600],
+                    ),
+                    prefixIcon: const Icon(Icons.lock_outlined, color: Colors.grey),
+                    filled: true,
+                    fillColor: const Color(0xFFBDBDBD),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                      borderSide: BorderSide.none,
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
                     suffixIcon: IconButton(
                       icon: Icon(
                         _obscurePassword
                             ? Icons.visibility_outlined
                             : Icons.visibility_off_outlined,
+                        color: Colors.grey,
                       ),
                       onPressed: () {
                         setState(() => _obscurePassword = !_obscurePassword);
@@ -133,19 +179,31 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 20),
                 TextFormField(
                   controller: _confirmPasswordController,
                   obscureText: _obscureConfirmPassword,
+                  style: GoogleFonts.manrope(fontSize: 16),
                   decoration: InputDecoration(
-                    labelText: 'Подтвердите пароль',
-                    prefixIcon: const Icon(Icons.lock_outlined),
-                    border: const OutlineInputBorder(),
+                    hintText: 'Повторите пароль',
+                    hintStyle: GoogleFonts.manrope(
+                      fontSize: 16,
+                      color: Colors.grey[600],
+                    ),
+                    prefixIcon: const Icon(Icons.lock_outlined, color: Colors.grey),
+                    filled: true,
+                    fillColor: const Color(0xFFBDBDBD),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                      borderSide: BorderSide.none,
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
                     suffixIcon: IconButton(
                       icon: Icon(
                         _obscureConfirmPassword
                             ? Icons.visibility_outlined
                             : Icons.visibility_off_outlined,
+                        color: Colors.grey,
                       ),
                       onPressed: () {
                         setState(() =>
@@ -165,32 +223,53 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 const SizedBox(height: 32),
                 SizedBox(
-                  height: 50,
+                  width: double.infinity,
+                  height: 54,
                   child: ElevatedButton(
                     onPressed: _isLoading ? null : _register,
                     style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFDAA87D),
+                      foregroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(15),
                       ),
+                      elevation: 0,
                     ),
                     child: _isLoading
-                        ? const CircularProgressIndicator()
-                        : const Text(
+                        ? const CircularProgressIndicator(color: Colors.white)
+                        : Text(
                             'Зарегистрироваться',
-                            style: TextStyle(fontSize: 16),
+                            style: GoogleFonts.manrope(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 24),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text('Уже есть аккаунт?'),
-                    TextButton(
-                      onPressed: () {
+                    Text(
+                      'Уже есть аккаунт? ',
+                      style: GoogleFonts.manrope(
+                        fontSize: 16,
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
                         Navigator.of(context).pop();
                       },
-                      child: const Text('Войти'),
+                      child: Text(
+                        'Войти!',
+                        style: GoogleFonts.manrope(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: const Color(0xFFDAA87D),
+                          decoration: TextDecoration.underline,
+                        ),
+                      ),
                     ),
                   ],
                 ),
