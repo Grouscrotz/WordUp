@@ -33,7 +33,7 @@ class WordUpApp extends StatelessWidget {
               brightness: provider.settings.darkTheme ? Brightness.dark : Brightness.light,
             ),
             useMaterial3: true,
-            cardTheme: CardTheme(
+            cardTheme: CardThemeData(
               elevation: 2,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
