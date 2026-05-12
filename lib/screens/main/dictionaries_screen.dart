@@ -154,7 +154,7 @@ class _DictionariesScreenState extends State<DictionariesScreen> {
                       title: const Text('Добавить категорию', style: TextStyle(fontFamily: 'Manrope')),
                       onTap: _showAddCategoryDialog,
                     ),
-                    const Divider(height: 1, margin: EdgeInsets.symmetric(horizontal: 16)),
+                    const Divider(height: 1),
                     ..._userCategories.map((cat) => ListTile(
                       leading: Icon(cat['icon'] as IconData, color: cat['color'] as Color),
                       title: Text(cat['name'] as String, style: const TextStyle(fontFamily: 'Manrope')),

@@ -324,7 +324,7 @@ class _StudyScreenState extends State<StudyScreen> {
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                   child: Column(
                     children: [
                       // Week days
@@ -468,7 +468,7 @@ class _StudyScreenState extends State<StudyScreen> {
 
   Widget _buildStatCard(String title, String value, IconData icon, Color color) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
       decoration: BoxDecoration(
         color: color.withOpacity(0.1),
         borderRadius: BorderRadius.circular(12),
@@ -480,11 +480,14 @@ class _StudyScreenState extends State<StudyScreen> {
             children: [
               Icon(icon, color: color, size: 20),
               const SizedBox(width: 8),
-              Text(
-                title,
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey.shade600,
+              Expanded(
+                child: Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey.shade600,
+                  ),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],
@@ -493,7 +496,7 @@ class _StudyScreenState extends State<StudyScreen> {
           Text(
             value,
             style: TextStyle(
-              fontSize: 18,
+              fontSize: 16,
               fontWeight: FontWeight.bold,
               color: color,
             ),
