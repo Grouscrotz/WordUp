@@ -2,11 +2,9 @@
 # Build artifacts
 *.o
 *.obj
-*.a
-*.so
-*.dll
-*.exe
 *.out
+build/
+dist/
 # Compiled and build artifacts
 *.pyc
 __pycache__/
@@ -23,15 +21,14 @@ build/
 target/
 
 # Dependencies
-node_modules/
-venv/
+pubspec.lock
+.dart_tool/
 .venv/
-__pycache__/
-.mypy_cache/
-.pytest_cache/
-target/
-.gradle/
+venv/
+node_modules/
 
+# Logs and temporary files
+*.log
 # IDE and editor files
 # Logs
 *.log
@@ -65,14 +62,24 @@ venv/
 *.swp
 *.swo
 *.tmp
+*.swp
 
-# System files
-.DS_Store
-Thumbs.db
+# Environment variables
 .env
 .env.local
 *.env.*
 
+# Editors
+.vscode/
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# OS generated files
+.DS_Store
+Thumbs.db
+```
 # Logs and coverage
 *.log
 coverage/
