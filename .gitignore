@@ -1,22 +1,29 @@
 ```
-# Dependencies
-.dart_tool/
-.packages
-
-# Build outputs
+# Build artifacts
+*.dart.js
+*.js
+*.map
 build/
+dist/
 
-# Logs
+# Dependencies
+.pub/
+.packages
+.dart_tool/
+
+# Logs and temp files
 *.log
+*.tmp
+*.swp
 
-# Environment variables
+# Environment
 .env
 .env.local
 *.env.*
 
-# IDE specific
-.idea/
+# Editors
 .vscode/
+.idea/
 *.swp
 *.swo
 
