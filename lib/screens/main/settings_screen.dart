@@ -57,7 +57,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   'Внешний вид',
                   style: TextStyle(
                     fontSize: 18,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w500,
                     fontFamily: 'Roboto',
                   ),
                 ),
@@ -87,7 +87,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   color: Colors.purple.shade100,
                                   borderRadius: BorderRadius.circular(10),
                                 ),
-                                child: Icon(Icons.palette, color: Colors.purple.shade700, size: 24),
+                                child: const Icon(Icons.palette_outlined, color: Colors.purple, size: 24),
                               ),
                               const SizedBox(width: 16),
                               Expanded(
@@ -136,7 +136,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   color: Colors.blue.shade100,
                                   borderRadius: BorderRadius.circular(10),
                                 ),
-                                child: Icon(Icons.language, color: Colors.blue.shade700, size: 24),
+                                child: const Icon(Icons.language_outlined, color: Colors.blue, size: 24),
                               ),
                               const SizedBox(width: 16),
                               Expanded(
@@ -179,7 +179,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   'Уведомления',
                   style: TextStyle(
                     fontSize: 18,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w500,
                     fontFamily: 'Roboto',
                   ),
                 ),
@@ -211,7 +211,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   color: Colors.green.shade100,
                                   borderRadius: BorderRadius.circular(10),
                                 ),
-                                child: Icon(Icons.notifications, color: Colors.green.shade700, size: 24),
+                                child: const Icon(Icons.notifications_outlined, color: Colors.green, size: 24),
                               ),
                               const SizedBox(width: 16),
                               const Expanded(
@@ -256,7 +256,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   color: Colors.indigo.shade100,
                                   borderRadius: BorderRadius.circular(10),
                                 ),
-                                child: Icon(Icons.bedtime, color: Colors.indigo.shade700, size: 24),
+                                child: const Icon(Icons.bedtime_outlined, color: Colors.indigo, size: 24),
                               ),
                               const SizedBox(width: 16),
                               Expanded(
@@ -305,7 +305,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   color: Colors.orange.shade100,
                                   borderRadius: BorderRadius.circular(10),
                                 ),
-                                child: Icon(Icons.timer, color: Colors.orange.shade700, size: 24),
+                                child: const Icon(Icons.timer_outlined, color: Colors.orange, size: 24),
                               ),
                               const SizedBox(width: 16),
                               Expanded(
@@ -348,7 +348,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   'Аккаунт',
                   style: TextStyle(
                     fontSize: 18,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w500,
                     fontFamily: 'Roboto',
                   ),
                 ),
@@ -378,7 +378,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   color: Colors.red.shade100,
                                   borderRadius: BorderRadius.circular(10),
                                 ),
-                                child: Icon(Icons.logout, color: Colors.red.shade700, size: 24),
+                                child: const Icon(Icons.logout_outlined, color: Colors.red, size: 24),
                               ),
                               const SizedBox(width: 16),
                               const Text(
@@ -412,7 +412,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   color: Colors.grey.shade200,
                                   borderRadius: BorderRadius.circular(10),
                                 ),
-                                child: Icon(Icons.delete_forever, color: Colors.grey.shade700, size: 24),
+                                child: const Icon(Icons.delete_forever_outlined, color: Colors.grey, size: 24),
                               ),
                               const SizedBox(width: 16),
                               const Text(

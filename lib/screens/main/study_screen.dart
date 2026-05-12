@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/app_provider.dart';
+import 'learn_screen.dart';
 
 class StudyScreen extends StatefulWidget {
   const StudyScreen({super.key});
@@ -110,8 +111,11 @@ class _StudyScreenState extends State<StudyScreen> {
                       color: Colors.transparent,
                       child: InkWell(
                         onTap: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Учить новые слова')),
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const LearnScreen(mode: 'new'),
+                            ),
                           );
                         },
                         borderRadius: BorderRadius.circular(16),
@@ -125,7 +129,7 @@ class _StudyScreenState extends State<StudyScreen> {
                                   color: Colors.green.shade100,
                                   borderRadius: BorderRadius.circular(10),
                                 ),
-                                child: Icon(Icons.auto_awesome, color: Colors.green.shade700, size: 24),
+                                child: const Icon(Icons.auto_awesome_outlined, color: Colors.green, size: 24),
                               ),
                               const SizedBox(width: 16),
                               Expanded(
@@ -162,8 +166,11 @@ class _StudyScreenState extends State<StudyScreen> {
                       color: Colors.transparent,
                       child: InkWell(
                         onTap: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Повторить слова')),
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const LearnScreen(mode: 'review'),
+                            ),
                           );
                         },
                         borderRadius: BorderRadius.circular(16),
@@ -177,7 +184,7 @@ class _StudyScreenState extends State<StudyScreen> {
                                   color: Colors.orange.shade100,
                                   borderRadius: BorderRadius.circular(10),
                                 ),
-                                child: Icon(Icons.refresh, color: Colors.orange.shade700, size: 24),
+                                child: const Icon(Icons.refresh_outlined, color: Colors.orange, size: 24),
                               ),
                               const SizedBox(width: 16),
                               Expanded(
@@ -249,7 +256,7 @@ class _StudyScreenState extends State<StudyScreen> {
                                   color: Colors.purple.shade100,
                                   borderRadius: BorderRadius.circular(10),
                                 ),
-                                child: Icon(Icons.swipe, color: Colors.purple.shade700, size: 24),
+                                child: const Icon(Icons.swipe_outlined, color: Colors.purple, size: 24),
                               ),
                               const SizedBox(width: 16),
                               const Text(
@@ -284,7 +291,7 @@ class _StudyScreenState extends State<StudyScreen> {
                                   color: Colors.teal.shade100,
                                   borderRadius: BorderRadius.circular(10),
                                 ),
-                                child: Icon(Icons.autorenew, color: Colors.teal.shade700, size: 24),
+                                child: const Icon(Icons.autorenew_outlined, color: Colors.teal, size: 24),
                               ),
                               const SizedBox(width: 16),
                               const Text(
@@ -386,7 +393,7 @@ class _StudyScreenState extends State<StudyScreen> {
                                   '$_wordsLearnedToday / $_maxWordsPerDay',
                                   style: const TextStyle(
                                     fontSize: 20,
-                                    fontWeight: FontWeight.bold,
+                                    fontWeight: FontWeight.w600,
                                   ),
                                 ),
                               ],
@@ -488,7 +495,7 @@ class _StudyScreenState extends State<StudyScreen> {
             value,
             style: TextStyle(
               fontSize: 16,
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w600,
               color: color,
             ),
           ),

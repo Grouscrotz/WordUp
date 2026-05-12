@@ -9,6 +9,12 @@ dist/
 # Dependencies
 .pub/
 .packages
+.pub-cache/
+pubspec.lock
+
+# Build outputs
+build/
+*.g.dart
 .dart_tool/
 
 # Logs and temp files
@@ -21,6 +27,9 @@ dist/
 .env.local
 *.env.*
 
+# Logs
+*.log
+**/logs
 # Editors
 .vscode/
 .idea/
