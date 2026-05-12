@@ -1,3 +1,12 @@
+```
+# Build artifacts
+*.o
+*.obj
+*.a
+*.so
+*.dll
+*.exe
+*.out
 # Compiled and build artifacts
 *.pyc
 __pycache__/
@@ -14,10 +23,16 @@ build/
 target/
 
 # Dependencies
-.pub/
-.dart_tool/
-**/.dart_tool/
+node_modules/
+venv/
+.venv/
+__pycache__/
+.mypy_cache/
+.pytest_cache/
+target/
+.gradle/
 
+# IDE and editor files
 # Logs
 *.log
 
@@ -49,9 +64,20 @@ venv/
 .idea/
 *.swp
 *.swo
+*.tmp
 
-# Coverage
+# System files
+.DS_Store
+Thumbs.db
+.env
+.env.local
+*.env.*
+
+# Logs and coverage
+*.log
 coverage/
+htmlcov/
+.coverage
 *.coverage
 # System files
 .DS_Store
