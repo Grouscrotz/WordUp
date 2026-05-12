@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/app_provider.dart';
+import 'learn_screen.dart';
 
 class StudyScreen extends StatefulWidget {
   const StudyScreen({super.key});
@@ -21,6 +22,10 @@ class _StudyScreenState extends State<StudyScreen> {
   int _recordStreak = 14;
   int _totalWordsLearned = 156;
 
+  int _getCurrentWeekdayIndex() {
+    return DateTime.now().weekday - 1; // 0 = Monday, 6 = Sunday
+  }
+
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<AppProvider>(context);
@@ -38,179 +43,178 @@ class _StudyScreenState extends State<StudyScreen> {
                 'Интервальное повторение',
                 style: TextStyle(
                   fontSize: 18,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w500,
                   fontFamily: 'Roboto',
                 ),
               ),
               const SizedBox(height: 12),
               
-              // Selected Categories Card
+              // Combined Card for Categories, Learn New Words, and Review Words
               Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(16),
                 ),
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    onTap: () {
-                      _showCategorySelectionDialog(context);
-                    },
-                    borderRadius: BorderRadius.circular(16),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Выбрано $_selectedCategoriesCount категории',
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  'New General Service List, Oxford 3000&5000',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.grey.shade600,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
+                child: Column(
+                  children: [
+                    // Selected Categories Card
+                    Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: () {
+                          _showCategorySelectionDialog(context);
+                        },
+                        borderRadius: BorderRadius.circular(16),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Row(
                             children: [
-                              _buildSmallDictionaryIcon(Icons.book, Colors.green),
-                              const SizedBox(width: 8),
-                              _buildSmallDictionaryIcon(Icons.menu_book, Colors.blue),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Выбрано $_selectedCategoriesCount категории',
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      'New General Service List, Oxford 3000&5000',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.grey.shade600,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  _buildSmallDictionaryIcon(Icons.book, Colors.green),
+                                  const SizedBox(width: 8),
+                                  _buildSmallDictionaryIcon(Icons.menu_book, Colors.blue),
+                                ],
+                              ),
                             ],
                           ),
-                        ],
+                        ),
                       ),
                     ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              
-              // Learn New Words Card
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    onTap: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Учить новые слова')),
-                      );
-                    },
-                    borderRadius: BorderRadius.circular(16),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              color: Colors.green.shade100,
-                              borderRadius: BorderRadius.circular(10),
+                    const Divider(height: 1),
+                    
+                    // Learn New Words Card
+                    Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const LearnScreen(mode: 'new'),
                             ),
-                            child: Icon(Icons.auto_awesome, color: Colors.green.shade700, size: 24),
-                          ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  'Учить новые слова',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                  ),
+                          );
+                        },
+                        borderRadius: BorderRadius.circular(16),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  color: Colors.green.shade100,
+                                  borderRadius: BorderRadius.circular(10),
                                 ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  'Выучено сегодня $_wordsLearnedToday из $_maxWordsPerDay',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.grey.shade600,
-                                  ),
+                                child: const Icon(Icons.auto_awesome_outlined, color: Colors.green, size: 24),
+                              ),
+                              const SizedBox(width: 16),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      'Учить новые слова',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      'Выучено сегодня $_wordsLearnedToday из $_maxWordsPerDay',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.grey.shade600,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
                     ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              
-              // Review Words Card
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    onTap: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Повторить слова')),
-                      );
-                    },
-                    borderRadius: BorderRadius.circular(16),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              color: Colors.orange.shade100,
-                              borderRadius: BorderRadius.circular(10),
+                    const Divider(height: 1),
+                    
+                    // Review Words Card
+                    Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const LearnScreen(mode: 'review'),
                             ),
-                            child: Icon(Icons.refresh, color: Colors.orange.shade700, size: 24),
-                          ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  'Повторить слова',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                  ),
+                          );
+                        },
+                        borderRadius: BorderRadius.circular(16),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  color: Colors.orange.shade100,
+                                  borderRadius: BorderRadius.circular(10),
                                 ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  'Слов для повторения $_wordsForReview',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.grey.shade600,
-                                  ),
+                                child: const Icon(Icons.refresh_outlined, color: Colors.orange, size: 24),
+                              ),
+                              const SizedBox(width: 16),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      'Повторить слова',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      'Слов для повторения $_wordsForReview',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.grey.shade600,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
               ),
               const SizedBox(height: 24),
@@ -220,7 +224,7 @@ class _StudyScreenState extends State<StudyScreen> {
                 'Дополнительные режимы (не влияют на статистику)',
                 style: TextStyle(
                   fontSize: 18,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w500,
                   fontFamily: 'Roboto',
                 ),
               ),
@@ -252,7 +256,7 @@ class _StudyScreenState extends State<StudyScreen> {
                                   color: Colors.purple.shade100,
                                   borderRadius: BorderRadius.circular(10),
                                 ),
-                                child: Icon(Icons.swipe, color: Colors.purple.shade700, size: 24),
+                                child: const Icon(Icons.swipe_outlined, color: Colors.purple, size: 24),
                               ),
                               const SizedBox(width: 16),
                               const Text(
@@ -287,7 +291,7 @@ class _StudyScreenState extends State<StudyScreen> {
                                   color: Colors.teal.shade100,
                                   borderRadius: BorderRadius.circular(10),
                                 ),
-                                child: Icon(Icons.autorenew, color: Colors.teal.shade700, size: 24),
+                                child: const Icon(Icons.autorenew_outlined, color: Colors.teal, size: 24),
                               ),
                               const SizedBox(width: 16),
                               const Text(
@@ -312,7 +316,7 @@ class _StudyScreenState extends State<StudyScreen> {
                 'Статистика',
                 style: TextStyle(
                   fontSize: 18,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w500,
                   fontFamily: 'Roboto',
                 ),
               ),
@@ -331,23 +335,14 @@ class _StudyScreenState extends State<StudyScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          _buildWeekDay('Пн', false),
-                          _buildWeekDay('Вт', false),
-                          _buildWeekDay('Ср', true),
-                          _buildWeekDay('Чт', false),
-                          _buildWeekDay('Пт', false),
-                          _buildWeekDay('Сб', false),
-                          _buildWeekDay('Вс', false),
+                          _buildWeekDay('Пн', 0),
+                          _buildWeekDay('Вт', 1),
+                          _buildWeekDay('Ср', 2),
+                          _buildWeekDay('Чт', 3),
+                          _buildWeekDay('Пт', 4),
+                          _buildWeekDay('Сб', 5),
+                          _buildWeekDay('Вс', 6),
                         ],
-                      ),
-                      const SizedBox(height: 8),
-                      // Orange arrow pointing to current day
-                      Center(
-                        child: Icon(
-                          Icons.keyboard_arrow_up,
-                          color: orangeColor,
-                          size: 24,
-                        ),
                       ),
                       const SizedBox(height: 16),
                       
@@ -398,7 +393,7 @@ class _StudyScreenState extends State<StudyScreen> {
                                   '$_wordsLearnedToday / $_maxWordsPerDay',
                                   style: const TextStyle(
                                     fontSize: 20,
-                                    fontWeight: FontWeight.bold,
+                                    fontWeight: FontWeight.w600,
                                   ),
                                 ),
                               ],
@@ -441,7 +436,10 @@ class _StudyScreenState extends State<StudyScreen> {
     );
   }
 
-  Widget _buildWeekDay(String day, bool isCurrent) {
+  Widget _buildWeekDay(String day, int weekdayIndex) {
+    final currentWeekdayIndex = _getCurrentWeekdayIndex();
+    final isCurrent = weekdayIndex == currentWeekdayIndex;
+    
     return Column(
       children: [
         Container(
@@ -456,7 +454,7 @@ class _StudyScreenState extends State<StudyScreen> {
               day,
               style: TextStyle(
                 fontSize: 12,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w500,
                 color: isCurrent ? Colors.white : Colors.grey.shade600,
               ),
             ),
@@ -497,7 +495,7 @@ class _StudyScreenState extends State<StudyScreen> {
             value,
             style: TextStyle(
               fontSize: 16,
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w600,
               color: color,
             ),
           ),
