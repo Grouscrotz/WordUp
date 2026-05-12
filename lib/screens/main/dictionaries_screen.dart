@@ -72,6 +72,7 @@ class _DictionariesScreenState extends State<DictionariesScreen> {
                   _userCategories.add({
                     'name': controller.text,
                     'icon': Icons.folder_outlined,
+                    'color': Colors.purple,
                   });
                 });
                 Navigator.pop(context);
