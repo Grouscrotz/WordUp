@@ -10,230 +10,472 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  List<int> _intervals = [1, 3, 7, 14, 30];
+  final Color orangeColor = const Color(0xFFDAA87D);
+  final Color backgroundColor = const Color(0xFFEFEFEF);
+  
+  String _quietModeStart = '22:00';
+  String _quietModeEnd = '08:00';
+  String _notificationFrequency = 'Раз в 2 часа';
+  bool _notificationsEnabled = true;
 
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<AppProvider>(context);
-    final settings = provider.settings;
+    final user = provider.currentUser;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Настройки'),
-      ),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          // Appearance Section
-          _buildSectionTitle('Внешний вид'),
-          Card(
-            child: Column(
-              children: [
-                SwitchListTile(
-                  secondary: const Icon(Icons.dark_mode),
-                  title: const Text('Тёмная тема'),
-                  subtitle: const Text('Использовать тёмную тему оформления'),
-                  value: settings.darkTheme,
-                  onChanged: (value) {
-                    provider.toggleTheme();
-                  },
+      backgroundColor: backgroundColor,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+          child: Column(
+            children: [
+              // Profile Section
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(50),
                 ),
-                const Divider(height: 1),
-                ListTile(
-                  leading: const Icon(Icons.language),
-                  title: const Text('Язык интерфейса'),
-                  subtitle: Text(_getLanguageName(settings.interfaceLanguage)),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: () => _showLanguageDialog(context, provider),
+                child: Icon(Icons.person, size: 48, color: orangeColor),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                user?.email ?? 'user@example.com',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey.shade600,
                 ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 24),
-
-          // Notifications Section
-          _buildSectionTitle('Уведомления'),
-          Card(
-            child: SwitchListTile(
-              secondary: const Icon(Icons.notifications),
-              title: const Text('Уведомления о повторении'),
-              subtitle: const Text('Напоминать о необходимости повторения слов'),
-              value: settings.notificationsEnabled,
-              onChanged: (value) {
-                provider.toggleNotifications();
-              },
-            ),
-          ),
-          const SizedBox(height: 24),
-
-          // Spaced Repetition Section
-          _buildSectionTitle('Интервалы повторения'),
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Настройте интервалы между повторениями (в днях)',
-                    style: TextStyle(fontSize: 14),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 32),
+              
+              // Appearance Section
+              Align(
+                alignment: Alignment.centerLeft,
+                child: const Text(
+                  'Внешний вид',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Roboto',
                   ),
-                  const SizedBox(height: 16),
-                  ..._intervals.asMap().entries.map((entry) {
-                    final index = entry.key;
-                    final interval = entry.value;
-                    return Row(
-                      children: [
-                        Text(
-                          'Повторение #${index + 1}:',
-                          style: const TextStyle(fontSize: 14),
-                        ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: Slider(
-                            value: interval.toDouble(),
-                            min: 1,
-                            max: 90,
-                            divisions: 89,
-                            label: '$interval дн.',
-                            onChanged: (value) {
-                              setState(() {
-                                _intervals[index] = value.round();
-                              });
-                            },
+                ),
+              ),
+              const SizedBox(height: 12),
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Column(
+                  children: [
+                    Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: () {
+                          _showThemeDialog(context);
+                        },
+                        borderRadius: BorderRadius.circular(16),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  color: Colors.purple.shade100,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Icon(Icons.palette, color: Colors.purple.shade700, size: 24),
+                              ),
+                              const SizedBox(width: 16),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      'Тема',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      'Как в системе',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: orangeColor,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Icon(Icons.chevron_right, color: Colors.grey.shade400),
+                            ],
                           ),
                         ),
-                        Text(
-                          '$interval дн.',
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    );
-                  }).toList(),
-                  const SizedBox(height: 16),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton.icon(
-                      onPressed: () {
-                        provider.updateReviewIntervals(_intervals);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Интервалы сохранены')),
-                        );
-                      },
-                      icon: const Icon(Icons.save),
-                      label: const Text('Сохранить интервалы'),
+                      ),
                     ),
-                  ),
-                ],
+                    const Divider(height: 1),
+                    Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: () {
+                          _showLanguageDialog(context);
+                        },
+                        borderRadius: BorderRadius.circular(16),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  color: Colors.blue.shade100,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Icon(Icons.language, color: Colors.blue.shade700, size: 24),
+                              ),
+                              const SizedBox(width: 16),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      'Язык интерфейса',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      'Как в системе',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: orangeColor,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Icon(Icons.chevron_right, color: Colors.grey.shade400),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ),
-          const SizedBox(height: 24),
-
-          // Data Management Section
-          _buildSectionTitle('Данные'),
-          Card(
-            child: Column(
-              children: [
-                ListTile(
-                  leading: const Icon(Icons.download),
-                  title: const Text('Экспорт данных'),
-                  subtitle: const Text('Сохранить прогресс в файл'),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Функция в разработке')),
-                    );
-                  },
-                ),
-                const Divider(height: 1),
-                ListTile(
-                  leading: const Icon(Icons.upload),
-                  title: const Text('Импорт данных'),
-                  subtitle: const Text('Загрузить прогресс из файла'),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Функция в разработке')),
-                    );
-                  },
-                ),
-                const Divider(height: 1),
-                ListTile(
-                  leading: const Icon(Icons.delete_forever, color: Colors.red),
-                  title: const Text(
-                    'Сбросить прогресс',
-                    style: TextStyle(color: Colors.red),
+              const SizedBox(height: 24),
+              
+              // Notifications Section
+              Align(
+                alignment: Alignment.centerLeft,
+                child: const Text(
+                  'Уведомления',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Roboto',
                   ),
-                  subtitle: const Text('Удалить весь прогресс обучения'),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: () => _confirmResetProgress(context, provider),
                 ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 24),
-
-          // Account Section
-          _buildSectionTitle('Аккаунт'),
-          Card(
-            child: ListTile(
-              leading: const Icon(Icons.logout, color: Colors.orange),
-              title: const Text(
-                'Выйти из аккаунта',
-                style: TextStyle(color: Colors.orange),
               ),
-              subtitle: Text(provider.currentUser?.email ?? ''),
-              trailing: const Icon(Icons.chevron_right),
-              onTap: () => _confirmLogout(context, provider),
-            ),
+              const SizedBox(height: 12),
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Column(
+                  children: [
+                    Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            _notificationsEnabled = !_notificationsEnabled;
+                          });
+                        },
+                        borderRadius: BorderRadius.circular(16),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  color: Colors.green.shade100,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Icon(Icons.notifications, color: Colors.green.shade700, size: 24),
+                              ),
+                              const SizedBox(width: 16),
+                              const Expanded(
+                                child: Text(
+                                  'Включить уведомления',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                              Switch(
+                                value: _notificationsEnabled,
+                                onChanged: (value) {
+                                  setState(() {
+                                    _notificationsEnabled = value;
+                                  });
+                                },
+                                activeColor: orangeColor,
+                                activeTrackColor: Colors.white,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    const Divider(height: 1),
+                    Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: () {
+                          _showQuietModeDialog(context);
+                        },
+                        borderRadius: BorderRadius.circular(16),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  color: Colors.indigo.shade100,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Icon(Icons.bedtime, color: Colors.indigo.shade700, size: 24),
+                              ),
+                              const SizedBox(width: 16),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      'Тихий режим',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      '$_quietModeStart - $_quietModeEnd',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: orangeColor,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Icon(Icons.chevron_right, color: Colors.grey.shade400),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    const Divider(height: 1),
+                    Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: () {
+                          _showNotificationFrequencyDialog(context);
+                        },
+                        borderRadius: BorderRadius.circular(16),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  color: Colors.orange.shade100,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Icon(Icons.timer, color: Colors.orange.shade700, size: 24),
+                              ),
+                              const SizedBox(width: 16),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      'Ограничить частоту уведомлений',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      _notificationFrequency,
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: orangeColor,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Icon(Icons.chevron_right, color: Colors.grey.shade400),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 24),
+              
+              // Account Section
+              Align(
+                alignment: Alignment.centerLeft,
+                child: const Text(
+                  'Аккаунт',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Roboto',
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Column(
+                  children: [
+                    Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: () {
+                          _confirmLogout(context, provider);
+                        },
+                        borderRadius: BorderRadius.circular(16),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  color: Colors.red.shade100,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Icon(Icons.logout, color: Colors.red.shade700, size: 24),
+                              ),
+                              const SizedBox(width: 16),
+                              const Text(
+                                'Выйти из аккаунта',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.red,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    const Divider(height: 1),
+                    Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: () {
+                          _confirmResetProgress(context, provider);
+                        },
+                        borderRadius: BorderRadius.circular(16),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.shade200,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Icon(Icons.delete_forever, color: Colors.grey.shade700, size: 24),
+                              ),
+                              const SizedBox(width: 16),
+                              const Text(
+                                'Сбросить весь прогресс',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 24),
+              
+              // Additional info
+              Center(
+                child: Text(
+                  'WordUp v1.0.0',
+                  style: TextStyle(color: Colors.grey.shade500, fontSize: 12),
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: 16),
-
-          // App Info
-          Center(
-            child: Text(
-              'WordUp v1.0.0',
-              style: TextStyle(color: Colors.grey.shade500),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSectionTitle(String title) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: Text(
-        title,
-        style: const TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
         ),
       ),
     );
   }
 
-  String _getLanguageName(String code) {
-    switch (code) {
-      case 'ru':
-        return 'Русский';
-      case 'en':
-        return 'English';
-      case 'es':
-        return 'Español';
-      case 'de':
-        return 'Deutsch';
-      default:
-        return 'Русский';
-    }
+  void _showThemeDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Выберите тему'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.light_mode),
+              title: const Text('Светлая'),
+              onTap: () => Navigator.pop(context),
+            ),
+            ListTile(
+              leading: const Icon(Icons.dark_mode),
+              title: const Text('Тёмная'),
+              onTap: () => Navigator.pop(context),
+            ),
+            ListTile(
+              leading: const Icon(Icons.phone_android),
+              title: const Text('Как в системе'),
+              onTap: () => Navigator.pop(context),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
-  void _showLanguageDialog(BuildContext context, AppProvider provider) {
+  void _showLanguageDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -241,31 +483,84 @@ class _SettingsScreenState extends State<SettingsScreen> {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            ListTile(title: const Text('Русский'), onTap: () => Navigator.pop(context)),
+            ListTile(title: const Text('English'), onTap: () => Navigator.pop(context)),
+            ListTile(title: const Text('Español'), onTap: () => Navigator.pop(context)),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showQuietModeDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Тихий режим'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              decoration: const InputDecoration(labelText: 'Начало', hintText: '22:00'),
+              onChanged: (value) => _quietModeStart = value,
+            ),
+            TextField(
+              decoration: const InputDecoration(labelText: 'Конец', hintText: '08:00'),
+              onChanged: (value) => _quietModeEnd = value,
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Отмена'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+              setState(() {});
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: orangeColor),
+            child: const Text('Сохранить'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showNotificationFrequencyDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Частота уведомлений'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
             ListTile(
-              title: const Text('Русский'),
+              title: const Text('Раз в 30 минут'),
               onTap: () {
-                provider.setInterfaceLanguage('ru');
+                setState(() => _notificationFrequency = 'Раз в 30 минут');
                 Navigator.pop(context);
               },
             ),
             ListTile(
-              title: const Text('English'),
+              title: const Text('Раз в час'),
               onTap: () {
-                provider.setInterfaceLanguage('en');
+                setState(() => _notificationFrequency = 'Раз в час');
                 Navigator.pop(context);
               },
             ),
             ListTile(
-              title: const Text('Español'),
+              title: const Text('Раз в 2 часа'),
               onTap: () {
-                provider.setInterfaceLanguage('es');
+                setState(() => _notificationFrequency = 'Раз в 2 часа');
                 Navigator.pop(context);
               },
             ),
             ListTile(
-              title: const Text('Deutsch'),
+              title: const Text('Раз в 4 часа'),
               onTap: () {
-                provider.setInterfaceLanguage('de');
+                setState(() => _notificationFrequency = 'Раз в 4 часа');
                 Navigator.pop(context);
               },
             ),
@@ -280,14 +575,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Сброс прогресса'),
-        content: const Text(
-          'Вы уверены? Это действие нельзя отменить. Весь ваш прогресс будет удалён.',
-        ),
+        content: const Text('Вы уверены? Это действие нельзя отменить.'),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Отмена'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
           ElevatedButton(
             onPressed: () {
               provider.resetProgress();
@@ -296,10 +586,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 const SnackBar(content: Text('Прогресс сброшен')),
               );
             },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
-              foregroundColor: Colors.white,
-            ),
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
             child: const Text('Сбросить'),
           ),
         ],
@@ -314,18 +601,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
         title: const Text('Выход из аккаунта'),
         content: const Text('Вы уверены, что хотите выйти?'),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Отмена'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
           ElevatedButton(
             onPressed: () async {
               await provider.logout();
               if (context.mounted) {
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                  '/login',
-                  (route) => false,
-                );
+                Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
               }
             },
             child: const Text('Выйти'),
