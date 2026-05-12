@@ -7,6 +7,20 @@
 *.dll
 *.exe
 *.out
+# Compiled and build artifacts
+*.pyc
+__pycache__/
+*.o
+*.obj
+*.class
+*.exe
+*.dll
+*.so
+*.a
+*.out
+dist/
+build/
+target/
 
 # Dependencies
 node_modules/
@@ -19,6 +33,33 @@ target/
 .gradle/
 
 # IDE and editor files
+# Logs
+*.log
+
+# Environment
+.env
+.env.local
+*.env.*
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# IDE files
+node_modules/
+venv/
+.venv/
+.env
+.env.local
+.env.*
+
+# Logs and temp files
+*.log
+*.tmp
+*.swp
+*.swo
+
+# Editors
 .vscode/
 .idea/
 *.swp
@@ -37,6 +78,22 @@ Thumbs.db
 coverage/
 htmlcov/
 .coverage
+*.coverage
+# System files
+.DS_Store
+Thumbs.db
+
+# Coverage
+coverage/
+htmlcov/
+.coverage
+
+# Python specific
+.mypy_cache/
+.pytest_cache/
+
+# Gradle
+.gradle/
 
 # Compressed files
 *.zip
@@ -62,3 +119,4 @@ htmlcov/
 *.tar.xz
 *.tar.zst
 ```
+*.tar.zst
