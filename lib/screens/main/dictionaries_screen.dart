@@ -15,14 +15,15 @@ class _DictionariesScreenState extends State<DictionariesScreen> {
   
   int _expandedDictIndex = -1;
   final List<Map<String, dynamic>> _userCategories = [
-    {'name': 'Свои слова', 'icon': Icons.bookmark_outline},
+    {'name': 'Свои слова', 'icon': Icons.bookmark_outline, 'color': Colors.orange},
   ];
 
-  // Пример данных для предзаполненных словарей
+  // Пример данных для предзаполненных словарей с цветными иконками
   final List<Map<String, dynamic>> _presetDictionaries = [
     {
       'name': 'New General Service List',
       'icon': Icons.library_books_outlined,
+      'color': Colors.blue,
       'categories': [
         {'name': 'Анатомия', 'count': 130},
         {'name': 'Археология', 'count': 85},
@@ -32,6 +33,7 @@ class _DictionariesScreenState extends State<DictionariesScreen> {
     {
       'name': 'Oxford 3000&5000',
       'icon': Icons.school_outlined,
+      'color': Colors.green,
       'categories': [
         {'name': 'Oxford 3000', 'count': 3000},
         {'name': 'Oxford 5000', 'count': 5000},
@@ -87,7 +89,7 @@ class _DictionariesScreenState extends State<DictionariesScreen> {
     return Scaffold(
       backgroundColor: backgroundColor,
       body: SafeArea(
-        child: Padding(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -148,13 +150,13 @@ class _DictionariesScreenState extends State<DictionariesScreen> {
                 child: Column(
                   children: [
                     ListTile(
-                      leading: const Icon(Icons.add_circle_outline, color: Colors.black54),
+                      leading: const Icon(Icons.add_circle_outline, color: Colors.orange),
                       title: const Text('Добавить категорию', style: TextStyle(fontFamily: 'Manrope')),
                       onTap: _showAddCategoryDialog,
                     ),
                     const Divider(height: 1, margin: EdgeInsets.symmetric(horizontal: 16)),
                     ..._userCategories.map((cat) => ListTile(
-                      leading: Icon(cat['icon'] as IconData, color: Colors.black54),
+                      leading: Icon(cat['icon'] as IconData, color: cat['color'] as Color),
                       title: Text(cat['name'] as String, style: const TextStyle(fontFamily: 'Manrope')),
                       trailing: const Icon(Icons.chevron_right, color: Colors.grey),
                     )),
@@ -163,69 +165,72 @@ class _DictionariesScreenState extends State<DictionariesScreen> {
               ),
               const SizedBox(height: 16),
 
-              // Predefined Dictionaries CardView
-              ..._presetDictionaries.asMap().entries.map((entry) {
-                final index = entry.key;
-                final dict = entry.value;
-                final isExpanded = _expandedDictIndex == index;
+              // Predefined Dictionaries - Combined in one CardView
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Column(
+                  children: _presetDictionaries.asMap().entries.map((entry) {
+                    final index = entry.key;
+                    final dict = entry.value;
+                    final isExpanded = _expandedDictIndex == index;
+                    final iconColor = dict['color'] as Color;
 
-                return Container(
-                  margin: const EdgeInsets.only(bottom: 16),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Column(
-                    children: [
-                      ListTile(
-                        leading: Icon(dict['icon'] as IconData, color: Colors.black54, size: 24),
-                        title: Text(dict['name'] as String, style: const TextStyle(fontFamily: 'Manrope')),
-                        trailing: Icon(
-                          isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
-                          color: Colors.grey,
+                    return Column(
+                      children: [
+                        if (index > 0) const Divider(height: 1, indent: 16, endIndent: 16),
+                        ListTile(
+                          leading: Icon(dict['icon'] as IconData, color: iconColor, size: 24),
+                          title: Text(dict['name'] as String, style: const TextStyle(fontFamily: 'Manrope')),
+                          trailing: Icon(
+                            isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                            color: Colors.grey,
+                          ),
+                          onTap: () {
+                            setState(() {
+                              _expandedDictIndex = isExpanded ? -1 : index;
+                            });
+                          },
                         ),
-                        onTap: () {
-                          setState(() {
-                            _expandedDictIndex = isExpanded ? -1 : index;
-                          });
-                        },
-                      ),
-                      if (isExpanded) ...[
-                        const Divider(height: 1),
-                        ...(dict['categories'] as List<Map<String, dynamic>>).map((category) {
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-                            child: Row(
-                              children: [
-                                const Icon(Icons.folder_open, size: 20, color: Colors.grey),
-                                const SizedBox(width: 12),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        category['name'] as String,
-                                        style: const TextStyle(fontFamily: 'Manrope', fontSize: 16),
-                                      ),
-                                      const SizedBox(height: 4),
-                                      Text(
-                                        '${category['count']} слов',
-                                        style: const TextStyle(color: Colors.grey, fontSize: 14, fontFamily: 'Manrope'),
-                                      ),
-                                    ],
+                        if (isExpanded) ...[
+                          const Divider(height: 1),
+                          ...(dict['categories'] as List<Map<String, dynamic>>).map((category) {
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+                              child: Row(
+                                children: [
+                                  Icon(Icons.folder_open, size: 20, color: iconColor),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          category['name'] as String,
+                                          style: const TextStyle(fontFamily: 'Manrope', fontSize: 16),
+                                        ),
+                                        const SizedBox(height: 4),
+                                        Text(
+                                          '${category['count']} слов',
+                                          style: const TextStyle(color: Colors.grey, fontSize: 14, fontFamily: 'Manrope'),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          );
-                        }).toList(),
+                                ],
+                              ),
+                            );
+                          }).toList(),
+                        ],
                       ],
-                    ],
-                  ),
-                );
-              }).toList(),
+                    );
+                  }).toList(),
+                ),
+              ),
               
-              const Spacer(),
+              const SizedBox(height: 24),
 
               // Add Word Button
               Center(
@@ -255,17 +260,6 @@ class _DictionariesScreenState extends State<DictionariesScreen> {
             ],
           ),
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 0,
-        selectedItemColor: orangeColor,
-        unselectedItemColor: Colors.grey,
-        type: BottomNavigationBarType.fixed,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.book_outlined), label: 'Словари'),
-          BottomNavigationBarItem(icon: Icon(Icons.psychology_outlined), label: 'Учить'),
-          BottomNavigationBarItem(icon: Icon(Icons.settings_outlined), label: 'Настройки'),
-        ],
       ),
     );
   }
