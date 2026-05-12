@@ -1,42 +1,59 @@
 ```
-# Build artifacts
-*.dart.js
-*.js
-*.map
-build/
-dist/
+# Compiled and build artifacts
+*.pyc
+__pycache__/
+*.o
+*.obj
+*.class
+*.exe
+*.dll
+*.so
+*.a
+*.out
 
 # Dependencies
-.pub/
-.packages
-.pub-cache/
-pubspec.lock
+node_modules/
+venv/
+.venv/
+.env
+.env.local
+.env.*
 
-# Build outputs
+# Build directories
+dist/
 build/
-*.g.dart
-.dart_tool/
+target/
+.gradle/
+
+# Python specific
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+.Python
+*.so
+.Python
+*.egg-info/
+.eggs/
+.mypy_cache/
+.pytest_cache/
+.coverage
+coverage/
+htmlcov/
 
 # Logs and temp files
 *.log
 *.tmp
 *.swp
+*.swo
 
-# Environment
-.env
-.env.local
-*.env.*
-
-# Logs
-*.log
-**/logs
 # Editors
 .vscode/
 .idea/
 *.swp
 *.swo
 
-# OS generated files
+# System files
 .DS_Store
 Thumbs.db
 ```
