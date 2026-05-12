@@ -14,37 +14,81 @@ class _DictionariesScreenState extends State<DictionariesScreen> {
   final Color backgroundColor = const Color(0xFFEFEFEF);
   
   int _expandedDictIndex = -1;
-  
+  final List<Map<String, dynamic>> _userCategories = [
+    {'name': 'Свои слова', 'icon': Icons.bookmark_outline},
+  ];
+
   // Пример данных для предзаполненных словарей
   final List<Map<String, dynamic>> _presetDictionaries = [
     {
       'name': 'New General Service List',
-      'icon': Icons.book,
+      'icon': Icons.library_books_outlined,
       'categories': [
-        {'name': 'Общие слова', 'icon': Icons.category},
-        {'name': 'Академические слова', 'icon': Icons.school},
+        {'name': 'Анатомия', 'count': 130},
+        {'name': 'Археология', 'count': 85},
+        {'name': 'География', 'count': 210},
       ],
     },
     {
       'name': 'Oxford 3000&5000',
-      'icon': Icons.menu_book,
+      'icon': Icons.school_outlined,
       'categories': [
-        {'name': 'Oxford 3000', 'icon': Icons.star},
-        {'name': 'Oxford 5000', 'icon': Icons.star_outline},
+        {'name': 'Oxford 3000', 'count': 3000},
+        {'name': 'Oxford 5000', 'count': 5000},
       ],
     },
   ];
 
+  void _showAddCategoryDialog() {
+    final controller = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: const Text('Новая категория'),
+        content: TextField(
+          controller: controller,
+          decoration: const InputDecoration(
+            hintText: 'Название категории',
+            border: OutlineInputBorder(),
+          ),
+          autofocus: true,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Отмена'),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: orangeColor,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            ),
+            onPressed: () {
+              if (controller.text.isNotEmpty) {
+                setState(() {
+                  _userCategories.add({
+                    'name': controller.text,
+                    'icon': Icons.folder_outlined,
+                  });
+                });
+                Navigator.pop(context);
+              }
+            },
+            child: const Text('Добавить', style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<AppProvider>(context);
-    final userDictionaries = provider.dictionaries;
-
     return Scaffold(
       backgroundColor: backgroundColor,
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -55,146 +99,76 @@ class _DictionariesScreenState extends State<DictionariesScreen> {
                   const Text(
                     'Словари',
                     style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
+                      fontSize: 24,
                       fontFamily: 'Roboto',
+                      color: Colors.black,
                     ),
                   ),
                   GestureDetector(
                     onTap: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Импорт словарей')),
-                      );
+                      // Logic for import
                     },
                     child: Text(
                       'Импортировать',
                       style: TextStyle(
                         fontSize: 16,
+                        fontFamily: 'Manrope',
                         color: orangeColor,
-                        fontWeight: FontWeight.w500,
                       ),
                     ),
                   ),
                 ],
               ),
               const SizedBox(height: 20),
-              
-              // Search bar
+
+              // Search Bar
               Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: TextField(
+                child: const TextField(
                   decoration: InputDecoration(
-                    hintText: 'Искать слова',
-                    hintStyle: TextStyle(color: Colors.grey.shade400),
-                    prefixIcon: Icon(Icons.search, color: Colors.grey.shade400),
                     border: InputBorder.none,
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                    icon: Icon(Icons.search, color: Colors.grey),
+                    hintText: 'Искать слова',
+                    hintStyle: TextStyle(color: Colors.grey, fontFamily: 'Manrope'),
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
-              
-              // Add Category Card
+              const SizedBox(height: 24),
+
+              // User Categories CardView (Combined)
               Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(16),
                 ),
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    onTap: () {
-                      _showAddCategoryDialog(context);
-                    },
-                    borderRadius: BorderRadius.circular(16),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              color: orangeColor.withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Icon(Icons.add, color: orangeColor, size: 24),
-                          ),
-                          const SizedBox(width: 16),
-                          const Text(
-                            'Добавить категорию',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ),
+                child: Column(
+                  children: [
+                    ListTile(
+                      leading: const Icon(Icons.add_circle_outline, color: Colors.black54),
+                      title: const Text('Добавить категорию', style: TextStyle(fontFamily: 'Manrope')),
+                      onTap: _showAddCategoryDialog,
                     ),
-                  ),
+                    const Divider(height: 1, margin: EdgeInsets.symmetric(horizontal: 16)),
+                    ..._userCategories.map((cat) => ListTile(
+                      leading: Icon(cat['icon'] as IconData, color: Colors.black54),
+                      title: Text(cat['name'] as String, style: const TextStyle(fontFamily: 'Manrope')),
+                      trailing: const Icon(Icons.chevron_right, color: Colors.grey),
+                    )),
+                  ],
                 ),
               ),
               const SizedBox(height: 16),
-              
-              // User's dictionaries (Свои слова)
-              if (userDictionaries.isNotEmpty) ...[
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Column(
-                    children: userDictionaries.map((dict) {
-                      return Material(
-                        color: Colors.transparent,
-                        child: InkWell(
-                          onTap: () {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Открыть: ${dict.name}')),
-                            );
-                          },
-                          borderRadius: BorderRadius.circular(16),
-                          child: Padding(
-                            padding: const EdgeInsets.all(16),
-                            child: Row(
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                    color: Colors.blue.shade100,
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: Icon(Icons.folder, color: Colors.blue.shade700, size: 24),
-                                ),
-                                const SizedBox(width: 16),
-                                Expanded(
-                                  child: Text(
-                                    dict.name,
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                ),
-                const SizedBox(height: 16),
-              ],
-              
-              // Preset dictionaries with expandable categories
+
+              // Predefined Dictionaries CardView
               ..._presetDictionaries.asMap().entries.map((entry) {
                 final index = entry.key;
                 final dict = entry.value;
                 final isExpanded = _expandedDictIndex == index;
-                
+
                 return Container(
                   margin: const EdgeInsets.only(bottom: 16),
                   decoration: BoxDecoration(
@@ -203,74 +177,45 @@ class _DictionariesScreenState extends State<DictionariesScreen> {
                   ),
                   child: Column(
                     children: [
-                      Material(
-                        color: Colors.transparent,
-                        child: InkWell(
-                          onTap: () {
-                            setState(() {
-                              _expandedDictIndex = isExpanded ? -1 : index;
-                            });
-                          },
-                          borderRadius: BorderRadius.circular(16),
-                          child: Padding(
-                            padding: const EdgeInsets.all(16),
-                            child: Row(
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                    color: Colors.green.shade100,
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: Icon(dict['icon'], color: Colors.green.shade700, size: 24),
-                                ),
-                                const SizedBox(width: 16),
-                                Expanded(
-                                  child: Text(
-                                    dict['name'],
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ),
-                                Icon(
-                                  isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
-                                  color: Colors.grey.shade400,
-                                ),
-                              ],
-                            ),
-                          ),
+                      ListTile(
+                        leading: Icon(dict['icon'] as IconData, color: Colors.black54, size: 24),
+                        title: Text(dict['name'] as String, style: const TextStyle(fontFamily: 'Manrope')),
+                        trailing: Icon(
+                          isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                          color: Colors.grey,
                         ),
+                        onTap: () {
+                          setState(() {
+                            _expandedDictIndex = isExpanded ? -1 : index;
+                          });
+                        },
                       ),
                       if (isExpanded) ...[
                         const Divider(height: 1),
-                        ...List<Map<String, dynamic>>.from(dict['categories']).map((category) {
-                          return Material(
-                            color: Colors.transparent,
-                            child: InkWell(
-                              onTap: () {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text('Категория: ${category['name']}')),
-                                );
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                                child: Row(
-                                  children: [
-                                    const SizedBox(width: 52),
-                                    Icon(category['icon'], color: Colors.grey.shade600, size: 20),
-                                    const SizedBox(width: 12),
-                                    Text(
-                                      category['name'],
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.grey.shade700,
+                        ...(dict['categories'] as List<Map<String, dynamic>>).map((category) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+                            child: Row(
+                              children: [
+                                const Icon(Icons.folder_open, size: 20, color: Colors.grey),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        category['name'] as String,
+                                        style: const TextStyle(fontFamily: 'Manrope', fontSize: 16),
                                       ),
-                                    ),
-                                  ],
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        '${category['count']} слов',
+                                        style: const TextStyle(color: Colors.grey, fontSize: 14, fontFamily: 'Manrope'),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
+                              ],
                             ),
                           );
                         }).toList(),
@@ -280,69 +225,46 @@ class _DictionariesScreenState extends State<DictionariesScreen> {
                 );
               }).toList(),
               
-              const SizedBox(height: 24),
-              
+              const Spacer(),
+
               // Add Word Button
-              GestureDetector(
-                onTap: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Добавить слово')),
-                  );
-                },
-                child: Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  decoration: BoxDecoration(
-                    color: orangeColor,
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: const Center(
-                    child: Text(
+              Center(
+                child: GestureDetector(
+                  onTap: () {
+                    // Logic to add word
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                    decoration: BoxDecoration(
+                      color: orangeColor,
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    child: const Text(
                       '+ Слово',
                       style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
                         color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: 'Manrope',
                       ),
                     ),
                   ),
                 ),
               ),
+              const SizedBox(height: 20),
             ],
           ),
         ),
       ),
-    );
-  }
-
-  void _showAddCategoryDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Новая категория'),
-        content: TextField(
-          decoration: const InputDecoration(
-            hintText: 'Название категории',
-            border: OutlineInputBorder(),
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Отмена'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Категория создана')),
-              );
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: orangeColor,
-            ),
-            child: const Text('Создать'),
-          ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: 0,
+        selectedItemColor: orangeColor,
+        unselectedItemColor: Colors.grey,
+        type: BottomNavigationBarType.fixed,
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.book_outlined), label: 'Словари'),
+          BottomNavigationBarItem(icon: Icon(Icons.psychology_outlined), label: 'Учить'),
+          BottomNavigationBarItem(icon: Icon(Icons.settings_outlined), label: 'Настройки'),
         ],
       ),
     );
