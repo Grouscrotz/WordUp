@@ -1,8 +1,17 @@
-```
-# Build artifacts
-*.dart_tool/
-*.build/
+# Compiled and build artifacts
+*.pyc
+__pycache__/
+*.o
+*.obj
+*.class
+*.exe
+*.dll
+*.so
+*.a
+*.out
+dist/
 build/
+target/
 
 # Dependencies
 .pub/
@@ -22,6 +31,20 @@ build/
 Thumbs.db
 
 # IDE files
+node_modules/
+venv/
+.venv/
+.env
+.env.local
+.env.*
+
+# Logs and temp files
+*.log
+*.tmp
+*.swp
+*.swo
+
+# Editors
 .vscode/
 .idea/
 *.swp
@@ -30,6 +53,21 @@ Thumbs.db
 # Coverage
 coverage/
 *.coverage
+# System files
+.DS_Store
+Thumbs.db
+
+# Coverage
+coverage/
+htmlcov/
+.coverage
+
+# Python specific
+.mypy_cache/
+.pytest_cache/
+
+# Gradle
+.gradle/
 
 # Compressed files
 *.zip
@@ -55,3 +93,4 @@ coverage/
 *.tar.xz
 *.tar.zst
 ```
+*.tar.zst

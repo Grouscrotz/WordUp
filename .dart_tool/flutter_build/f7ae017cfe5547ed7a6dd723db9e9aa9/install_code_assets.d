@@ -1,0 +1,1 @@
+ C:\\wordup\\.dart_tool\\flutter_build\\f7ae017cfe5547ed7a6dd723db9e9aa9\\native_assets.json: 
