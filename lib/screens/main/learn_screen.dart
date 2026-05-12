@@ -27,7 +27,7 @@ class _LearnScreenState extends State<LearnScreen> {
   ];
 
   void _nextWord() {
-    if (_currentWordIndex < widget.words.length - 1) {
+    if (_currentWordIndex < _words.length - 1) {
       setState(() {
         _currentWordIndex++;
         _isFlipped = false;
@@ -86,11 +86,10 @@ class _LearnScreenState extends State<LearnScreen> {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    '${widget.words.length}',
+                    '${_words.length}',
                     style: const TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
-                      color: orangeColor,
                     ),
                   ),
                 ],
