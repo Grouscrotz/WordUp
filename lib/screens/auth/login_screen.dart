@@ -69,9 +69,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  'Добро пожаловать! Пожалуйста,\nвведите ваши данные для входа.',
+                  'Добро пожаловать!\nПожалуйста, введите ваши данные для входа.',
                   style: GoogleFonts.manrope(
-                    fontSize: 16,
+                    fontSize: 14,
                     color: Colors.grey[700],
                     height: 1.4,
                   ),
@@ -188,12 +188,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         Navigator.of(context).pushNamed('/register');
                       },
                       child: Text(
-                        'Зарегистрируйтесь',
+                        'Зарегистрируйтесь!',
                         style: GoogleFonts.manrope(
                           fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: const Color(0xFFDAA87D),
-                          decoration: TextDecoration.underline,
+                          fontWeight: FontWeight.w800,
+                          color: const Color(0xFFDAA87D)
                         ),
                       ),
                     ),
