@@ -2,273 +2,569 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/app_provider.dart';
 
-class StudyScreen extends StatelessWidget {
+class StudyScreen extends StatefulWidget {
   const StudyScreen({super.key});
+
+  @override
+  State<StudyScreen> createState() => _StudyScreenState();
+}
+
+class _StudyScreenState extends State<StudyScreen> {
+  final Color orangeColor = const Color(0xFFDAA87D);
+  final Color backgroundColor = const Color(0xFFEFEFEF);
+  
+  int _selectedCategoriesCount = 2;
+  int _wordsLearnedToday = 3;
+  int _wordsForReview = 5;
+  int _maxWordsPerDay = 10;
+  int _learningStreak = 7;
+  int _recordStreak = 14;
+  int _totalWordsLearned = 156;
 
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<AppProvider>(context);
-    final wordsForReview = provider.getWordsForReview();
-    final newWords = provider.getNewWords();
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Учить'),
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Statistics Section
-            _buildStatisticsSection(context, provider),
-            const SizedBox(height: 24),
-            
-            // Study Options
-            Text(
-              'Режимы обучения',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 16),
-            
-            // Learn New Words Card
-            _buildStudyOptionCard(
-              context,
-              icon: Icons.auto_awesome,
-              color: Colors.green,
-              title: 'Учить новые слова',
-              subtitle: '${newWords.length} слов доступно',
-              count: newWords.length,
-              onTap: () => _startLearning(context, 'new'),
-            ),
-            const SizedBox(height: 12),
-            
-            // Review Words Card
-            _buildStudyOptionCard(
-              context,
-              icon: Icons.refresh,
-              color: Colors.orange,
-              title: 'Повторять слова',
-              subtitle: '${wordsForReview.length} слов на повторение',
-              count: wordsForReview.length,
-              onTap: () => _startLearning(context, 'review'),
-            ),
-            const SizedBox(height: 24),
-            
-            // Dictionary Selection
-            Text(
-              'Выберите словарь',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 16),
-            
-            ...provider.dictionaries.map((dict) => 
-              _buildDictionaryCard(context, dict),
-            ).toList(),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildStatisticsSection(BuildContext context, AppProvider provider) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Colors.blue.shade600, Colors.blue.shade400],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.blue.withOpacity(0.3),
-            blurRadius: 10,
-            offset: const Offset(0, 5),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+      backgroundColor: backgroundColor,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildStatItem(
-                icon: Icons.check_circle_outline,
-                value: '${provider.totalWordsLearned}',
-                label: 'Слов изучено',
+              // Interval Repetition Section
+              const Text(
+                'Интервальное повторение',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Roboto',
+                ),
               ),
-              _buildStatItem(
-                icon: Icons.repeat,
-                value: '${provider.totalReviewsCompleted}',
-                label: 'Повторений',
+              const SizedBox(height: 12),
+              
+              // Selected Categories Card
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: () {
+                      _showCategorySelectionDialog(context);
+                    },
+                    borderRadius: BorderRadius.circular(16),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Выбрано $_selectedCategoriesCount категории',
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  'New General Service List, Oxford 3000&5000',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey.shade600,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              _buildSmallDictionaryIcon(Icons.book, Colors.green),
+                              const SizedBox(width: 8),
+                              _buildSmallDictionaryIcon(Icons.menu_book, Colors.blue),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
               ),
-              _buildStatItem(
-                icon: Icons.local_fire_department,
-                value: '${provider.currentStreak}',
-                label: 'Дней подряд',
+              const SizedBox(height: 16),
+              
+              // Learn New Words Card
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Учить новые слова')),
+                      );
+                    },
+                    borderRadius: BorderRadius.circular(16),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: Colors.green.shade100,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Icon(Icons.auto_awesome, color: Colors.green.shade700, size: 24),
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Учить новые слова',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  'Выучено сегодня $_wordsLearnedToday из $_maxWordsPerDay',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey.shade600,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              
+              // Review Words Card
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Повторить слова')),
+                      );
+                    },
+                    borderRadius: BorderRadius.circular(16),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: Colors.orange.shade100,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Icon(Icons.refresh, color: Colors.orange.shade700, size: 24),
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Повторить слова',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  'Слов для повторения $_wordsForReview',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey.shade600,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
+              
+              // Additional Modes Section
+              const Text(
+                'Дополнительные режимы (не влияют на статистику)',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Roboto',
+                ),
+              ),
+              const SizedBox(height: 12),
+              
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Column(
+                  children: [
+                    Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Пролистать слова')),
+                          );
+                        },
+                        borderRadius: BorderRadius.circular(16),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  color: Colors.purple.shade100,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Icon(Icons.swipe, color: Colors.purple.shade700, size: 24),
+                              ),
+                              const SizedBox(width: 16),
+                              const Text(
+                                'Пролистать слова',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    const Divider(height: 1),
+                    Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Автоматический режим')),
+                          );
+                        },
+                        borderRadius: BorderRadius.circular(16),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  color: Colors.teal.shade100,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Icon(Icons.autorenew, color: Colors.teal.shade700, size: 24),
+                              ),
+                              const SizedBox(width: 16),
+                              const Text(
+                                'Автоматический режим',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 24),
+              
+              // Statistics Section
+              const Text(
+                'Статистика',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Roboto',
+                ),
+              ),
+              const SizedBox(height: 12),
+              
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    children: [
+                      // Week days
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          _buildWeekDay('Пн', false),
+                          _buildWeekDay('Вт', false),
+                          _buildWeekDay('Ср', true),
+                          _buildWeekDay('Чт', false),
+                          _buildWeekDay('Пт', false),
+                          _buildWeekDay('Сб', false),
+                          _buildWeekDay('Вс', false),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      // Orange arrow pointing to current day
+                      Center(
+                        child: Icon(
+                          Icons.keyboard_arrow_up,
+                          color: orangeColor,
+                          size: 24,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      
+                      // Learning streak cards
+                      Row(
+                        children: [
+                          Expanded(
+                            child: _buildStatCard(
+                              'Вы учите слова',
+                              '$_learningStreak дней',
+                              Icons.local_fire_department,
+                              orangeColor,
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: _buildStatCard(
+                              'Рекорд',
+                              '$_recordStreak дней',
+                              Icons.emoji_events,
+                              Colors.amber.shade700,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      
+                      // Divider
+                      Divider(color: Colors.grey.shade300, height: 1),
+                      const SizedBox(height: 16),
+                      
+                      // Words learned today with edit button
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Выучено слов сегодня',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey.shade600,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  '$_wordsLearnedToday / $_maxWordsPerDay',
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              _showMaxWordsDialog(context);
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: orangeColor.withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Icon(Icons.edit, color: orangeColor, size: 20),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ],
           ),
-        ],
+        ),
       ),
     );
   }
 
-  Widget _buildStatItem({
-    required IconData icon,
-    required String value,
-    required String label,
-  }) {
+  Widget _buildSmallDictionaryIcon(IconData icon, Color color) {
+    return Container(
+      padding: const EdgeInsets.all(6),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Icon(icon, color: color, size: 18),
+    );
+  }
+
+  Widget _buildWeekDay(String day, bool isCurrent) {
     return Column(
       children: [
-        Icon(icon, color: Colors.white.withOpacity(0.9), size: 28),
-        const SizedBox(height: 8),
-        Text(
-          value,
-          style: const TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
+        Container(
+          width: 36,
+          height: 36,
+          decoration: BoxDecoration(
+            color: isCurrent ? orangeColor : Colors.grey.shade200,
+            borderRadius: BorderRadius.circular(18),
           ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 12,
-            color: Colors.white.withOpacity(0.8),
+          child: Center(
+            child: Text(
+              day,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+                color: isCurrent ? Colors.white : Colors.grey.shade600,
+              ),
+            ),
           ),
         ),
       ],
     );
   }
 
-  Widget _buildStudyOptionCard(
-    BuildContext context, {
-    required IconData icon,
-    required Color color,
-    required String title,
-    required String subtitle,
-    required int count,
-    required VoidCallback onTap,
-  }) {
-    return Card(
-      child: InkWell(
-        onTap: count > 0 ? onTap : null,
+  Widget _buildStatCard(String title, String value, IconData icon, Color color) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.1),
         borderRadius: BorderRadius.circular(12),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             children: [
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: color.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(icon, color: color, size: 32),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      subtitle,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey.shade600,
-                      ),
-                    ),
-                  ],
+              Icon(icon, color: color, size: 20),
+              const SizedBox(width: 8),
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey.shade600,
                 ),
               ),
-              if (count > 0)
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: color,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Text(
-                    '$count',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                )
-              else
-                Text(
-                  'Нет слов',
-                  style: TextStyle(color: Colors.grey.shade400),
-                ),
             ],
           ),
-        ),
+          const SizedBox(height: 8),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: color,
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildDictionaryCard(BuildContext context, dynamic dict) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 8),
-      child: ListTile(
-        leading: CircleAvatar(
-          backgroundColor: Colors.blue.shade100,
-          child: Icon(Icons.menu_book, color: Colors.blue.shade700),
-        ),
-        title: Text(dict.name),
-        subtitle: Text('${dict.learnedWords}/${dict.totalWords} слов'),
-        trailing: const Icon(Icons.chevron_right),
-        onTap: () => _showDictionaryOptions(context, dict),
-      ),
-    );
-  }
-
-  void _startLearning(BuildContext context, String mode) {
-    Navigator.pushNamed(context, '/study-session', arguments: {'mode': mode});
-  }
-
-  void _showDictionaryOptions(BuildContext context, dynamic dict) {
-    showModalBottomSheet(
+  void _showCategorySelectionDialog(BuildContext context) {
+    showDialog(
       context: context,
-      builder: (context) => SafeArea(
-        child: Column(
+      builder: (context) => AlertDialog(
+        title: const Text('Выберите словари'),
+        content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            ListTile(
-              leading: const Icon(Icons.auto_awesome),
-              title: const Text('Учить новые слова'),
-              onTap: () {
-                Navigator.pop(context);
-                _startLearning(context, 'new');
-              },
+            CheckboxListTile(
+              title: const Text('New General Service List'),
+              value: true,
+              onChanged: (value) {},
+              activeColor: orangeColor,
             ),
-            ListTile(
-              leading: const Icon(Icons.refresh),
-              title: const Text('Повторить слова'),
-              onTap: () {
-                Navigator.pop(context);
-                _startLearning(context, 'review');
-              },
+            CheckboxListTile(
+              title: const Text('Oxford 3000&5000'),
+              value: true,
+              onChanged: (value) {},
+              activeColor: orangeColor,
             ),
           ],
         ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Закрыть'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showMaxWordsDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Максимум слов в день'),
+        content: TextField(
+          keyboardType: TextInputType.number,
+          decoration: InputDecoration(
+            hintText: '$_maxWordsPerDay',
+            border: const OutlineInputBorder(),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Отмена'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Лимит обновлён')),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: orangeColor,
+            ),
+            child: const Text('Сохранить'),
+          ),
+        ],
       ),
     );
   }

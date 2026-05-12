@@ -14,6 +14,23 @@ build/
 target/
 
 # Dependencies
+.pub/
+.dart_tool/
+**/.dart_tool/
+
+# Logs
+*.log
+
+# Environment
+.env
+.env.local
+*.env.*
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# IDE files
 node_modules/
 venv/
 .venv/
@@ -33,6 +50,9 @@ venv/
 *.swp
 *.swo
 
+# Coverage
+coverage/
+*.coverage
 # System files
 .DS_Store
 Thumbs.db
@@ -71,4 +91,6 @@ htmlcov/
 *.tar.gz
 *.tar.bz2
 *.tar.xz
+*.tar.zst
+```
 *.tar.zst
