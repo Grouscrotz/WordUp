@@ -13,7 +13,7 @@ class _DictionariesScreenState extends State<DictionariesScreen> {
   final Color orangeColor = const Color(0xFFDAA87D);
   final Color backgroundColor = const Color(0xFFEFEFEF);
   
-  bool _expandedDictIndex = -1;
+  int _expandedDictIndex = -1;
   
   // Пример данных для предзаполненных словарей
   final List<Map<String, dynamic>> _presetDictionaries = [
