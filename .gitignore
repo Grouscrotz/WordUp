@@ -1,31 +1,34 @@
 ```
-# Dependencies
-.pub/
-.dart_tool/
+# Build artifacts
 build/
+*.dart.js
+*.part.js
+*.map
+*.so
+*.dylib
+*.dll
+
+# Dependencies
+.pub-cache/
+pubspec.lock
 
 # Logs
 *.log
 **/logs
 
-# Environment variables
-.env
-.env.local
-.env.*
-!.env.example
-
 # OS generated files
 .DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
 Thumbs.db
+ehthumbs.db
+Icon?
+.directory
+*.nib
+obj/
 
 # IDE specific
 .idea/
 .vscode/
 *.swp
 *.swo
+*~
 ```

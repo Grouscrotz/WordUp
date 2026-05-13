@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/app_provider.dart';
+import 'import_dictionary_screen.dart';
 
 class DictionariesScreen extends StatefulWidget {
   const DictionariesScreen({super.key});
@@ -109,7 +110,12 @@ class _DictionariesScreenState extends State<DictionariesScreen> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      // Logic for import
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ImportDictionaryScreen(),
+                        ),
+                      );
                     },
                     child: Text(
                       'Импортировать',
