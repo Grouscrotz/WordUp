@@ -505,42 +505,51 @@ class _LearnScreenState extends State<LearnScreen> {
   }
 
   Widget _buildExpandableExample(String english, String russian, String word) {
-    return ExpansionTile(
-      collapsedIconColor: Colors.grey,
-      iconColor: Colors.grey,
-      leading: const Icon(Icons.chevron_right, size: 20),
-      title: Padding(
-        padding: const EdgeInsets.only(left: 0, right: 16),
-        child: Align(
+    return Theme(
+      data: Theme.of(context).copyWith(
+        dividerColor: Colors.transparent,
+      ),
+      child: ExpansionTile(
+        collapsedIconColor: Colors.grey,
+        iconColor: Colors.grey,
+        leading: const Icon(Icons.chevron_right, size: 24),
+        title: Align(
           alignment: Alignment.centerLeft,
           child: _buildHighlightedText(
             english,
             word,
-            TextStyle(
-              fontSize: 14,
+            const TextStyle(
+              fontSize: 15,
               fontFamily: 'Manrope',
-              color: Colors.grey.shade700,
+              color: Colors.black87,
             ),
           ),
         ),
-      ),
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 0, bottom: 8, right: 16),
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: _buildHighlightedText(
-              russian,
-              word,
-              TextStyle(
-                fontSize: 14,
-                fontFamily: 'Manrope',
-                color: Colors.grey.shade600,
+        children: [
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.grey[200],
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: _buildHighlightedText(
+                russian,
+                word,
+                const TextStyle(
+                  fontSize: 14,
+                  fontFamily: 'Manrope',
+                  color: Colors.black87,
+                ),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+        expandedAlignment: Alignment.centerLeft,
+        childrenPadding: EdgeInsets.zero,
+      ),
     );
   }
 }
