@@ -543,6 +543,7 @@ class _ImportDictionaryScreenState extends State<ImportDictionaryScreen> {
                   padding: const EdgeInsets.all(16),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -573,121 +574,113 @@ class _ImportDictionaryScreenState extends State<ImportDictionaryScreen> {
                       const SizedBox(height: 16),
                       
                       // Cloud dictionaries list
-                      Expanded(
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: _cloudDictionaries.length,
-                          itemBuilder: (context, index) {
-                            final dict = _cloudDictionaries[index];
-                            final isSelected = _selectedCloudDict == dict['name'];
-                            
-                            return GestureDetector(
-                              onTap: () => _importFromCloud(dict['name']),
-                              child: Container(
-                                margin: const EdgeInsets.only(bottom: 12),
-                                padding: const EdgeInsets.all(16),
-                                decoration: BoxDecoration(
-                                  color: isSelected ? orangeColor.withOpacity(0.1) : Colors.grey.shade50,
-                                  borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(
+                      ..._cloudDictionaries.map((dict) {
+                        final isSelected = _selectedCloudDict == dict['name'];
+                        
+                        return GestureDetector(
+                          onTap: () => _importFromCloud(dict['name']),
+                          child: Container(
+                            margin: const EdgeInsets.only(bottom: 12),
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: isSelected ? orangeColor.withOpacity(0.1) : Colors.grey.shade50,
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                color: isSelected ? orangeColor : Colors.grey.shade200,
+                                width: 2,
+                              ),
+                            ),
+                            child: Row(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
                                     color: isSelected ? orangeColor : Colors.grey.shade200,
-                                    width: 2,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Icon(
+                                    Icons.cloud,
+                                    color: isSelected ? Colors.white : Colors.grey.shade600,
+                                    size: 24,
                                   ),
                                 ),
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      padding: const EdgeInsets.all(10),
-                                      decoration: BoxDecoration(
-                                        color: isSelected ? orangeColor : Colors.grey.shade200,
-                                        borderRadius: BorderRadius.circular(10),
+                                const SizedBox(width: 16),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        dict['name'],
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                          fontFamily: 'Roboto',
+                                          color: isSelected ? orangeColor : Colors.black,
+                                        ),
                                       ),
-                                      child: Icon(
-                                        Icons.cloud,
-                                        color: isSelected ? Colors.white : Colors.grey.shade600,
-                                        size: 24,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 16),
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                      const SizedBox(height: 4),
+                                      Row(
                                         children: [
                                           Text(
-                                            dict['name'],
+                                            '${dict['author']}',
                                             style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600,
-                                              fontFamily: 'Roboto',
-                                              color: isSelected ? orangeColor : Colors.black,
+                                              fontSize: 13,
+                                              color: Colors.grey.shade600,
+                                              fontFamily: 'Manrope',
                                             ),
                                           ),
-                                          const SizedBox(height: 4),
-                                          Row(
-                                            children: [
-                                              Text(
-                                                '${dict['author']}',
-                                                style: TextStyle(
-                                                  fontSize: 13,
-                                                  color: Colors.grey.shade600,
-                                                  fontFamily: 'Manrope',
-                                                ),
+                                          const SizedBox(width: 8),
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                            decoration: BoxDecoration(
+                                              color: Colors.grey.shade200,
+                                              borderRadius: BorderRadius.circular(4),
+                                            ),
+                                            child: Text(
+                                              '${dict['words']} слов',
+                                              style: TextStyle(
+                                                fontSize: 11,
+                                                color: Colors.grey.shade700,
+                                                fontFamily: 'Manrope',
+                                                fontWeight: FontWeight.w500,
                                               ),
-                                              const SizedBox(width: 8),
-                                              Container(
-                                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                                                decoration: BoxDecoration(
-                                                  color: Colors.grey.shade200,
-                                                  borderRadius: BorderRadius.circular(4),
-                                                ),
-                                                child: Text(
-                                                  '${dict['words']} слов',
-                                                  style: TextStyle(
-                                                    fontSize: 11,
-                                                    color: Colors.grey.shade700,
-                                                    fontFamily: 'Manrope',
-                                                    fontWeight: FontWeight.w500,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          const SizedBox(height: 4),
-                                          Row(
-                                            children: [
-                                              Icon(
-                                                Icons.star,
-                                                color: Colors.amber.shade700,
-                                                size: 16,
-                                              ),
-                                              const SizedBox(width: 4),
-                                              Text(
-                                                '${dict['rating']}',
-                                                style: TextStyle(
-                                                  fontSize: 13,
-                                                  color: Colors.grey.shade700,
-                                                  fontFamily: 'Manrope',
-                                                  fontWeight: FontWeight.w600,
-                                                ),
-                                              ),
-                                            ],
+                                            ),
                                           ),
                                         ],
                                       ),
-                                    ),
-                                    Icon(
-                                      isSelected ? Icons.radio_button_checked : Icons.radio_button_unchecked,
-                                      color: isSelected ? orangeColor : Colors.grey.shade400,
-                                      size: 24,
-                                    ),
-                                  ],
+                                      const SizedBox(height: 4),
+                                      Row(
+                                        children: [
+                                          Icon(
+                                            Icons.star,
+                                            color: Colors.amber.shade700,
+                                            size: 16,
+                                          ),
+                                          const SizedBox(width: 4),
+                                          Text(
+                                            '${dict['rating']}',
+                                            style: TextStyle(
+                                              fontSize: 13,
+                                              color: Colors.grey.shade700,
+                                              fontFamily: 'Manrope',
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
+                                Icon(
+                                  isSelected ? Icons.radio_button_checked : Icons.radio_button_unchecked,
+                                  color: isSelected ? orangeColor : Colors.grey.shade400,
+                                  size: 24,
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      }).toList(),
                       
                       if (_importStatus.isNotEmpty) ...[
                         const SizedBox(height: 16),
