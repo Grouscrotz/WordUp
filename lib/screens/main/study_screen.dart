@@ -50,17 +50,6 @@ class _StudyScreenState extends State<StudyScreen> {
               const SizedBox(height: 12),
               
               // Combined Card for Categories, Learn New Words, and Review Words
-              // Пользовательские категории
-              const Text(
-                'Пользовательские категории',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  fontFamily: 'Roboto',
-                ),
-              ),
-              const SizedBox(height: 8),
-              
               Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -215,17 +204,6 @@ class _StudyScreenState extends State<StudyScreen> {
                 ),
               ),
               const SizedBox(height: 24),
-              
-              // Режимы обучения
-              const Text(
-                'Режимы обучения',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  fontFamily: 'Roboto',
-                ),
-              ),
-              const SizedBox(height: 8),
               
               // Statistics Section
               const Text(

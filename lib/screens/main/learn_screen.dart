@@ -510,10 +510,10 @@ class _LearnScreenState extends State<LearnScreen> {
         dividerColor: Colors.transparent,
       ),
       child: ExpansionTile(
-        collapsedIconColor: Colors.transparent,
-        iconColor: Colors.transparent,
+        collapsedIconColor: Colors.grey,
+        iconColor: Colors.grey,
         trailing: const SizedBox.shrink(),
-        leading: const Icon(Icons.chevron_right, size: 24),
+        leading: const Icon(Icons.chevron_right, size: 24, color: Colors.grey),
         title: Align(
           alignment: Alignment.centerLeft,
           child: _buildHighlightedText(
