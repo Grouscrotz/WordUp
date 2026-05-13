@@ -13,11 +13,25 @@ class _ImportDictionaryScreenState extends State<ImportDictionaryScreen> {
   final Color orangeColor = const Color(0xFFDAA87D);
   final Color backgroundColor = const Color(0xFFEFEFEF);
 
+  // 0 = file import, 1 = cloud import
+  int _selectedImportType = 0;
+  
   String? _selectedFilePath;
   String? _fileName;
   bool _isImporting = false;
   int _importProgress = 0;
   String _importStatus = '';
+  
+  // Cloud import state
+  List<Map<String, dynamic>> _cloudDictionaries = [
+    {'name': 'Базовая лексика (A1-A2)', 'author': 'LinguaCloud', 'words': 500, 'rating': 4.8},
+    {'name': 'Деловой английский', 'author': 'BusinessPro', 'words': 1200, 'rating': 4.9},
+    {'name': 'Разговорные фразы', 'author': 'SpeakEasy', 'words': 350, 'rating': 4.7},
+    {'name': 'Академическая лексика', 'author': 'AcademicWords', 'words': 800, 'rating': 4.6},
+    {'name': 'Сленг и идиомы', 'author': 'NativeSpeaker', 'words': 600, 'rating': 4.5},
+  ];
+  
+  String? _selectedCloudDict;
 
   Future<void> _pickFile() async {
     try {
@@ -43,9 +57,16 @@ class _ImportDictionaryScreenState extends State<ImportDictionaryScreen> {
   }
 
   Future<void> _importDictionary() async {
-    if (_selectedFilePath == null) {
+    if (_selectedImportType == 0 && _selectedFilePath == null) {
       setState(() {
         _importStatus = 'Пожалуйста, выберите файл для импорта';
+      });
+      return;
+    }
+    
+    if (_selectedImportType == 1 && _selectedCloudDict == null) {
+      setState(() {
+        _importStatus = 'Пожалуйста, выберите словарь из облака';
       });
       return;
     }
@@ -109,6 +130,12 @@ class _ImportDictionaryScreenState extends State<ImportDictionaryScreen> {
         ),
       );
     }
+  }
+  
+  Future<void> _importFromCloud(String dictName) async {
+    setState(() {
+      _selectedCloudDict = dictName;
+    });
   }
 
   void _showFormatHelp() {
@@ -261,7 +288,98 @@ class _ImportDictionaryScreenState extends State<ImportDictionaryScreen> {
               ),
               const SizedBox(height: 24),
 
-              // File selection card
+              // Import type selector (File / Cloud)
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () => setState(() {
+                            _selectedImportType = 0;
+                            _importStatus = '';
+                            _selectedCloudDict = null;
+                          }),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            decoration: BoxDecoration(
+                              color: _selectedImportType == 0 ? orangeColor : Colors.transparent,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.insert_drive_file_outlined,
+                                  color: _selectedImportType == 0 ? Colors.white : Colors.grey.shade600,
+                                  size: 20,
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  'Из файла',
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w600,
+                                    fontFamily: 'Manrope',
+                                    color: _selectedImportType == 0 ? Colors.white : Colors.grey.shade600,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () => setState(() {
+                            _selectedImportType = 1;
+                            _importStatus = '';
+                            _selectedFilePath = null;
+                            _fileName = null;
+                          }),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            decoration: BoxDecoration(
+                              color: _selectedImportType == 1 ? orangeColor : Colors.transparent,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.cloud_outlined,
+                                  color: _selectedImportType == 1 ? Colors.white : Colors.grey.shade600,
+                                  size: 20,
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  'Из облака',
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w600,
+                                    fontFamily: 'Manrope',
+                                    color: _selectedImportType == 1 ? Colors.white : Colors.grey.shade600,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              // File selection card (shown when file import is selected)
+              if (_selectedImportType == 0) ...[
               Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -412,6 +530,228 @@ class _ImportDictionaryScreenState extends State<ImportDictionaryScreen> {
                   ),
                 ),
               ),
+              ],
+              
+              // Cloud dictionaries list (shown when cloud import is selected)
+              if (_selectedImportType == 1) ...[
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'Доступные словари в облаке',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              fontFamily: 'Roboto',
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              // Refresh cloud dictionaries
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: orangeColor.withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Icon(Icons.refresh, color: orangeColor, size: 20),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      
+                      // Cloud dictionaries list
+                      Expanded(
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: _cloudDictionaries.length,
+                          itemBuilder: (context, index) {
+                            final dict = _cloudDictionaries[index];
+                            final isSelected = _selectedCloudDict == dict['name'];
+                            
+                            return GestureDetector(
+                              onTap: () => _importFromCloud(dict['name']),
+                              child: Container(
+                                margin: const EdgeInsets.only(bottom: 12),
+                                padding: const EdgeInsets.all(16),
+                                decoration: BoxDecoration(
+                                  color: isSelected ? orangeColor.withOpacity(0.1) : Colors.grey.shade50,
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                    color: isSelected ? orangeColor : Colors.grey.shade200,
+                                    width: 2,
+                                  ),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.all(10),
+                                      decoration: BoxDecoration(
+                                        color: isSelected ? orangeColor : Colors.grey.shade200,
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: Icon(
+                                        Icons.cloud,
+                                        color: isSelected ? Colors.white : Colors.grey.shade600,
+                                        size: 24,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 16),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            dict['name'],
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w600,
+                                              fontFamily: 'Roboto',
+                                              color: isSelected ? orangeColor : Colors.black,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 4),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                '${dict['author']}',
+                                                style: TextStyle(
+                                                  fontSize: 13,
+                                                  color: Colors.grey.shade600,
+                                                  fontFamily: 'Manrope',
+                                                ),
+                                              ),
+                                              const SizedBox(width: 8),
+                                              Container(
+                                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.grey.shade200,
+                                                  borderRadius: BorderRadius.circular(4),
+                                                ),
+                                                child: Text(
+                                                  '${dict['words']} слов',
+                                                  style: TextStyle(
+                                                    fontSize: 11,
+                                                    color: Colors.grey.shade700,
+                                                    fontFamily: 'Manrope',
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 4),
+                                          Row(
+                                            children: [
+                                              Icon(
+                                                Icons.star,
+                                                color: Colors.amber.shade700,
+                                                size: 16,
+                                              ),
+                                              const SizedBox(width: 4),
+                                              Text(
+                                                '${dict['rating']}',
+                                                style: TextStyle(
+                                                  fontSize: 13,
+                                                  color: Colors.grey.shade700,
+                                                  fontFamily: 'Manrope',
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Icon(
+                                      isSelected ? Icons.radio_button_checked : Icons.radio_button_unchecked,
+                                      color: isSelected ? orangeColor : Colors.grey.shade400,
+                                      size: 24,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      
+                      if (_importStatus.isNotEmpty) ...[
+                        const SizedBox(height: 16),
+                        Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: _importStatus.contains('успешно') || _importStatus.contains('Успешно')
+                                ? Colors.green.shade50
+                                : Colors.red.shade50,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(
+                                _importStatus.contains('успешно') || _importStatus.contains('Успешно')
+                                    ? Icons.check_circle
+                                    : Icons.error,
+                                color: _importStatus.contains('успешно') || _importStatus.contains('Успешно')
+                                    ? Colors.green.shade700
+                                    : Colors.red.shade700,
+                                size: 20,
+                              ),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Text(
+                                  _importStatus,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: _importStatus.contains('успешно') || _importStatus.contains('Успешно')
+                                        ? Colors.green.shade700
+                                        : Colors.red.shade700,
+                                    fontFamily: 'Manrope',
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                      
+                      if (_isImporting) ...[
+                        const SizedBox(height: 16),
+                        LinearProgressIndicator(
+                          value: _importProgress / 100,
+                          backgroundColor: Colors.grey.shade200,
+                          valueColor: AlwaysStoppedAnimation<Color>(orangeColor),
+                          minHeight: 8,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'Импорт: $_importProgress%',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey.shade600,
+                            fontFamily: 'Manrope',
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+              ),
+              ],
               
               const Spacer(),
               
