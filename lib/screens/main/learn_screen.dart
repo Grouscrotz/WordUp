@@ -316,8 +316,8 @@ class _LearnScreenState extends State<LearnScreen> {
                           children: [
                             // Image container
                             Container(
-                              width: double.infinity,
-                              height: 200,
+                              width: 120,
+                              height: 120,
                               decoration: BoxDecoration(
                                 color: _isImageRevealed ? Colors.white : Colors.grey.shade200,
                                 borderRadius: BorderRadius.circular(16),
@@ -330,13 +330,13 @@ class _LearnScreenState extends State<LearnScreen> {
                                         fit: BoxFit.cover,
                                         errorBuilder: (context, error, stackTrace) => Icon(
                                           Icons.image_outlined,
-                                          size: 80,
+                                          size: 60,
                                           color: Colors.grey.shade400,
                                         ),
                                       )
                                     : Icon(
                                         Icons.image_outlined,
-                                        size: 80,
+                                        size: 60,
                                         color: Colors.grey.shade400,
                                       ),
                               ),
@@ -375,15 +375,15 @@ class _LearnScreenState extends State<LearnScreen> {
                                 });
                               },
                               child: Container(
-                                width: 140,
-                                height: 140,
+                                width: 80,
+                                height: 80,
                                 decoration: BoxDecoration(
                                   border: Border.all(color: Colors.grey.shade400, width: 2),
-                                  borderRadius: BorderRadius.circular(16),
+                                  borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: const Icon(
                                   Icons.visibility_outlined,
-                                  size: 70,
+                                  size: 40,
                                   color: Colors.grey,
                                 ),
                               ),
@@ -443,20 +443,22 @@ class _LearnScreenState extends State<LearnScreen> {
                     // Left button: "Я уже знаю это слово"
                     Expanded(
                       child: GestureDetector(
-                        onTap: isFirstWord ? null : _prevWord,
+                        onTap: _prevWord,
                         child: Opacity(
                           opacity: isFirstWord ? 0.5 : 1.0,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text(
-                                'Я уже знаю\nэто слово',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  height: 1.3,
-                                  color: Colors.grey.shade700,
-                                  fontFamily: 'Manrope',
+                              Flexible(
+                                child: Text(
+                                  'Я уже знаю\nэто слово',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    height: 1.3,
+                                    color: Colors.grey.shade700,
+                                    fontFamily: 'Manrope',
+                                  ),
                                 ),
                               ),
                               const SizedBox(width: 8),
@@ -476,14 +478,16 @@ class _LearnScreenState extends State<LearnScreen> {
                           children: [
                             const Icon(Icons.chevron_right, size: 24, color: Colors.grey),
                             const SizedBox(width: 8),
-                            Text(
-                              'Начать учить\nэто слово',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 14,
-                                height: 1.3,
-                                color: Colors.grey.shade700,
-                                fontFamily: 'Manrope',
+                            Flexible(
+                              child: Text(
+                                'Начать учить\nэто слово',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  height: 1.3,
+                                  color: Colors.grey.shade700,
+                                  fontFamily: 'Manrope',
+                                ),
                               ),
                             ),
                           ],
