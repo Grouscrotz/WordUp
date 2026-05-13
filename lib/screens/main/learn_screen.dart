@@ -17,6 +17,7 @@ class _LearnScreenState extends State<LearnScreen> {
   int _currentWordIndex = 0;
   bool _isRevealed = false;
   bool _isImageRevealed = false;
+  bool _sendToReviewQueue = false; // Флаг для отправки слова в конец колоды
   
   // Интервалы повторения в днях для разных уровней сложности
   final Map<String, int> _repetitionIntervals = {
@@ -68,7 +69,19 @@ class _LearnScreenState extends State<LearnScreen> {
     debugPrint('Слово "${_words[_currentWordIndex]['word']}" оценено как: $difficulty');
     debugPrint('Следующее повторение через: ${_repetitionIntervals[difficulty]} дн.');
     
+    if (_sendToReviewQueue) {
+      // Логика отправки слова в конец колоды (будет реализована позже)
+      debugPrint('Слово отправлено в конец колоды для повторения');
+      _sendToReviewQueue = false; // Сбрасываем флаг
+    }
+    
     _nextWord();
+  }
+
+  void _toggleSendToReview() {
+    setState(() {
+      _sendToReviewQueue = !_sendToReviewQueue;
+    });
   }
 
   void _nextWord() {
@@ -469,6 +482,7 @@ class _LearnScreenState extends State<LearnScreen> {
                       Row(
                         children: [
                           Expanded(
+                            flex: 1,
                             child: _buildDifficultyButton(
                               'Легко',
                               '4 дня',
@@ -476,8 +490,9 @@ class _LearnScreenState extends State<LearnScreen> {
                               () => _handleDifficultySelection('easy'),
                             ),
                           ),
-                          const SizedBox(width: 12),
+                          const SizedBox(width: 8),
                           Expanded(
+                            flex: 1,
                             child: _buildDifficultyButton(
                               'Нормально',
                               '2 дня',
@@ -485,8 +500,9 @@ class _LearnScreenState extends State<LearnScreen> {
                               () => _handleDifficultySelection('normal'),
                             ),
                           ),
-                          const SizedBox(width: 12),
+                          const SizedBox(width: 8),
                           Expanded(
+                            flex: 1,
                             child: _buildDifficultyButton(
                               'Сложно',
                               '1 день',
@@ -495,6 +511,51 @@ class _LearnScreenState extends State<LearnScreen> {
                             ),
                           ),
                         ],
+                      ),
+                      const SizedBox(height: 12),
+                      // Кнопка "Показать снова в конце колоды"
+                      GestureDetector(
+                        onTap: _toggleSendToReview,
+                        child: Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          decoration: BoxDecoration(
+                            color: _sendToReviewQueue 
+                                ? orangeColor.withOpacity(0.15) 
+                                : Colors.grey.shade100,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: _sendToReviewQueue 
+                                  ? orangeColor.withOpacity(0.5) 
+                                  : Colors.grey.shade300,
+                              width: 1.5,
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.refresh,
+                                size: 20,
+                                color: _sendToReviewQueue 
+                                    ? orangeColor 
+                                    : Colors.grey.shade600,
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                'Показать снова в конце колоды',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: _sendToReviewQueue 
+                                      ? orangeColor 
+                                      : Colors.grey.shade700,
+                                  fontFamily: 'Manrope',
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     ],
                   ),

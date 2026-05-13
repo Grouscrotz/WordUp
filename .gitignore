@@ -1,13 +1,13 @@
-```
-# Build artifacts
-*.class
+# Compiled and build artifacts
+*.pyc
+__pycache__/
 *.o
 *.obj
 *.class
-*.exe
 *.dll
 *.so
 *.a
+*.exe
 *.out
 dist/
 build/
@@ -25,74 +25,34 @@ venv/
 *.log
 *.tmp
 *.swp
-*.swo
-*.tmp
-
-# Coverage reports
-coverage/
-htmlcov/
-.coverage
 
 # Editors
 .vscode/
 .idea/
+*.swp
+*.swo
+*.tmp
 
-# System files
+# Build outputs
+dist/
+build/
+target/
+*.jar
+*.war
+*.class
+*.pyc
+__pycache__/
+
+# Coverage reports
+coverage/
+htmlcov/
+*.coverage
+
+# OS specific
 .DS_Store
 Thumbs.db
 
-# Compressed files
-*.zip
-*.gz
-*.tar
-*.tgz
-*.bz2
-*.xz
-*.7z
-*.rar
-*.zst
-*.lz4
-*.lzh
-*.cab
-*.arj
-*.rpm
-*.deb
-*.Z
-*.lz
-*.lzo
-*.tar.gz
-*.tar.bz2
-*.tar.xz
-*.tar.zst
-
-# Python specific
-*.pyc
-__pycache__/
-*.pyo
-*.pyd
-.Python
-*.so
-.Python
-*.egg-info/
-.eggs/
+# MyPy cache
 .mypy_cache/
+# PyTest cache
 .pytest_cache/
-.tox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-*.log
-.git/
-
-# Dart/Flutter specific
-.dart_tool/
-.packages
-.pub-cache/
-.pub/
-build/
-*.g.dart
-
-```
