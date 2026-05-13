@@ -81,14 +81,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           padding: const EdgeInsets.all(16),
                           child: Row(
                             children: [
-                              Container(
-                                padding: const EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  color: Colors.purple.shade100,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: const Icon(Icons.palette_outlined, color: Colors.purple, size: 24),
-                              ),
+                              const Icon(Icons.palette_outlined, color: Colors.purple, size: 24),
                               const SizedBox(width: 16),
                               Expanded(
                                 child: Column(
@@ -130,14 +123,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           padding: const EdgeInsets.all(16),
                           child: Row(
                             children: [
-                              Container(
-                                padding: const EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  color: Colors.blue.shade100,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: const Icon(Icons.language_outlined, color: Colors.blue, size: 24),
-                              ),
+                              const Icon(Icons.language_outlined, color: Colors.blue, size: 24),
                               const SizedBox(width: 16),
                               Expanded(
                                 child: Column(
@@ -205,14 +191,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           padding: const EdgeInsets.all(16),
                           child: Row(
                             children: [
-                              Container(
-                                padding: const EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  color: Colors.green.shade100,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: const Icon(Icons.notifications_outlined, color: Colors.green, size: 24),
-                              ),
+                              const Icon(Icons.notifications_outlined, color: Colors.green, size: 24),
                               const SizedBox(width: 16),
                               const Expanded(
                                 child: Text(
@@ -250,14 +229,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           padding: const EdgeInsets.all(16),
                           child: Row(
                             children: [
-                              Container(
-                                padding: const EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  color: Colors.indigo.shade100,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: const Icon(Icons.bedtime_outlined, color: Colors.indigo, size: 24),
-                              ),
+                              const Icon(Icons.bedtime_outlined, color: Colors.indigo, size: 24),
                               const SizedBox(width: 16),
                               Expanded(
                                 child: Column(
@@ -299,14 +271,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           padding: const EdgeInsets.all(16),
                           child: Row(
                             children: [
-                              Container(
-                                padding: const EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  color: Colors.orange.shade100,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: const Icon(Icons.timer_outlined, color: Colors.orange, size: 24),
-                              ),
+                              const Icon(Icons.timer_outlined, color: Colors.orange, size: 24),
                               const SizedBox(width: 16),
                               Expanded(
                                 child: Column(
@@ -372,14 +337,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           padding: const EdgeInsets.all(16),
                           child: Row(
                             children: [
-                              Container(
-                                padding: const EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  color: Colors.red.shade100,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: const Icon(Icons.logout_outlined, color: Colors.red, size: 24),
-                              ),
+                              const Icon(Icons.logout_outlined, color: Colors.red, size: 24),
                               const SizedBox(width: 16),
                               const Text(
                                 'Выйти из аккаунта',
@@ -406,14 +364,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           padding: const EdgeInsets.all(16),
                           child: Row(
                             children: [
-                              Container(
-                                padding: const EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  color: Colors.grey.shade200,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: const Icon(Icons.delete_forever_outlined, color: Colors.grey, size: 24),
-                              ),
+                              const Icon(Icons.delete_forever_outlined, color: Colors.grey, size: 24),
                               const SizedBox(width: 16),
                               const Text(
                                 'Сбросить весь прогресс',

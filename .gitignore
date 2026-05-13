@@ -1,64 +1,24 @@
 ```
-# Build artifacts
-*.o
-*.obj
-*.a
-*.so
-*.dll
-*.exe
-*.out
-
 # Dependencies
-node_modules/
-venv/
-.venv/
-__pycache__/
-.mypy_cache/
-.pytest_cache/
-target/
-.gradle/
+.pub/
+.buildlog
+.flutter-plugins
+.flutter-plugin-dependencies
+.packages
 
-# Logs and temp files
-*.log
-*.tmp
-*.swp
-*.swo
+# Generated plugin build files
+**/android/**/gradle-wrapper.properties
+**/android/.gradle
+**/android/build/
+**/ios/Pods/
+**/ios/.symlinks/
 
-# Environment
-.env
-.env.local
-*.env.*
-
-# Editors
-.vscode/
-.idea/
-
-# Coverage
+# Unit test coverage
 coverage/
-htmlcov/
-.coverage
 
-# Compressed files
-*.zip
-*.gz
-*.tar
-*.tgz
-*.bz2
-*.xz
-*.7z
-*.rar
-*.zst
-*.lz4
-*.lzh
-*.cab
-*.arj
-*.rpm
-*.deb
-*.Z
-*.lz
-*.lzo
-*.tar.gz
-*.tar.bz2
-*.tar.xz
-*.tar.zst
+# Build outputs
+bin/cache/
+bin/internal/shared_preferences_test.dart
+build/
+.dart_tool/
 ```
