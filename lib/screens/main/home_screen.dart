@@ -4,6 +4,8 @@ import '../../providers/app_provider.dart';
 import 'dictionaries_screen.dart';
 import 'study_screen.dart';
 import 'settings_screen.dart';
+import 'learn_screen.dart';
+import 'review_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
