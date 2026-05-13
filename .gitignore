@@ -1,41 +1,16 @@
 ```
 # Dependencies
 .pub/
-.buildlog
-.flutter-plugins
-.flutter-plugin-dependencies
-.packages
+.build/
+.dependencies/
 
-# Generated plugin build files
-android/.gradle/
-ios/Pods/
-ios/.symlinks/
+# Generated code
+*.g.dart
+*.freezed.dart
 
-# Unit test coverage
-coverage/
-
-# Android
-android/app/build/
-android/.gradle/
-android/local.properties
-
-# iOS
-ios/build/
-ios/Pods/
-ios/Flutter/.last_build_id
-
-# Web
-build/web/
-
-# Temporary files
-*.tmp
-*.temp
-*.log
-
-# Environment variables
-.env
-.env.local
-*.env.*
+# Build outputs
+build/
+.dart_tool/
 
 # IDE
 .idea/
@@ -43,7 +18,15 @@ build/web/
 *.swp
 *.swo
 
-# OS generated
+# OS
 .DS_Store
 Thumbs.db
+
+# Logs
+*.log
+
+# Environment
+.env
+.env.local
+*.env.*
 ```

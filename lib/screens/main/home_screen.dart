@@ -47,6 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
             _currentIndex = index;
           });
         },
+        backgroundColor: Colors.white,
         destinations: const [
           NavigationDestination(
             icon: Icon(Icons.menu_book_outlined),
