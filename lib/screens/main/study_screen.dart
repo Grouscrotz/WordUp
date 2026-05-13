@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/app_provider.dart';
 import 'learn_screen.dart';
+import 'review_screen.dart';
 
 class StudyScreen extends StatefulWidget {
   const StudyScreen({super.key});
@@ -162,7 +163,7 @@ class _StudyScreenState extends State<StudyScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const LearnScreen(mode: 'review'),
+                              builder: (context) => const ReviewScreen(),
                             ),
                           );
                         },
