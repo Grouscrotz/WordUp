@@ -245,26 +245,25 @@ class _ReviewScreenState extends State<ReviewScreen> {
                       ],
                     ),
                   ),
-                  if (!isFirstWord)
-                    Padding(
-                      padding: const EdgeInsets.only(left: 12),
-                      child: GestureDetector(
-                        onTap: _prevWord,
-                        child: Container(
-                          width: 32,
-                          height: 32,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey.shade400, width: 1.5),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: const Icon(
-                            Icons.arrow_back_rounded,
-                            size: 18,
-                            color: Colors.black54,
-                          ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 12),
+                    child: GestureDetector(
+                      onTap: _prevWord,
+                      child: Container(
+                        width: 32,
+                        height: 32,
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey.shade400, width: 1.5),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: const Icon(
+                          Icons.arrow_back_rounded,
+                          size: 18,
+                          color: Colors.black54,
                         ),
                       ),
                     ),
+                  ),
                 ],
               ),
               const SizedBox(height: 24),
@@ -431,12 +430,12 @@ class _ReviewScreenState extends State<ReviewScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 16),
               
               // CardView оценки сложности вспоминания (для повторения - всегда виден)
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(20),
@@ -453,7 +452,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
                         fontFamily: 'Roboto',
                       ),
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 4),
                     // Кнопка "Показать снова" справа в углу (под заголовком)
                     Align(
                       alignment: Alignment.centerRight,
@@ -470,7 +469,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 12),
+                    const SizedBox(height: 8),
                     // Кнопки сложности на всю ширину (уменьшенные)
                     Row(
                       children: [
