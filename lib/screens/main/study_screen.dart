@@ -123,14 +123,7 @@ class _StudyScreenState extends State<StudyScreen> {
                           padding: const EdgeInsets.all(16),
                           child: Row(
                             children: [
-                              Container(
-                                padding: const EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  color: Colors.green.shade100,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: const Icon(Icons.auto_awesome_outlined, color: Colors.green, size: 24),
-                              ),
+                              const Icon(Icons.auto_awesome_outlined, color: Colors.green, size: 24),
                               const SizedBox(width: 16),
                               Expanded(
                                 child: Column(
@@ -178,14 +171,7 @@ class _StudyScreenState extends State<StudyScreen> {
                           padding: const EdgeInsets.all(16),
                           child: Row(
                             children: [
-                              Container(
-                                padding: const EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  color: Colors.orange.shade100,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: const Icon(Icons.refresh_outlined, color: Colors.orange, size: 24),
-                              ),
+                              const Icon(Icons.refresh_outlined, color: Colors.orange, size: 24),
                               const SizedBox(width: 16),
                               Expanded(
                                 child: Column(
@@ -250,14 +236,7 @@ class _StudyScreenState extends State<StudyScreen> {
                           padding: const EdgeInsets.all(16),
                           child: Row(
                             children: [
-                              Container(
-                                padding: const EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  color: Colors.purple.shade100,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: const Icon(Icons.swipe_outlined, color: Colors.purple, size: 24),
-                              ),
+                              const Icon(Icons.swipe_outlined, color: Colors.purple, size: 24),
                               const SizedBox(width: 16),
                               const Text(
                                 'Пролистать слова',
@@ -285,14 +264,7 @@ class _StudyScreenState extends State<StudyScreen> {
                           padding: const EdgeInsets.all(16),
                           child: Row(
                             children: [
-                              Container(
-                                padding: const EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  color: Colors.teal.shade100,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: const Icon(Icons.autorenew_outlined, color: Colors.teal, size: 24),
-                              ),
+                              const Icon(Icons.autorenew_outlined, color: Colors.teal, size: 24),
                               const SizedBox(width: 16),
                               const Text(
                                 'Автоматический режим',
