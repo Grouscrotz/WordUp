@@ -433,147 +433,78 @@ class _ReviewScreenState extends State<ReviewScreen> {
               ),
               const SizedBox(height: 24),
               
-              // CardView оценки сложности вспоминания (только для повторения и если слово открыто)
-              if (_isRevealed) ...[
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Заголовок
-                      const Text(
-                        'Как сложно было вспомнить?',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          fontFamily: 'Roboto',
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      // Кнопка "Показать снова" справа в углу (под заголовком)
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: GestureDetector(
-                          onTap: _sendToReview,
-                          child: Text(
-                            'Показать снова',
-                            style: TextStyle(
-                              fontSize: 11,
-                              fontWeight: FontWeight.w500,
-                              color: orangeColor,
-                              fontFamily: 'Manrope',
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      // Кнопки сложности на всю ширину (уменьшенные)
-                      Row(
-                        children: [
-                          Expanded(
-                            child: _buildDifficultyButton(
-                              'Легко',
-                              '4 дня',
-                              Colors.green,
-                              () => _handleDifficultySelection('easy'),
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: _buildDifficultyButton(
-                              'Нормально',
-                              '2 дня',
-                              orangeColor,
-                              () => _handleDifficultySelection('normal'),
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: _buildDifficultyButton(
-                              'Сложно',
-                              '1 день',
-                              Colors.red.shade400,
-                              () => _handleDifficultySelection('hard'),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+              // CardView оценки сложности вспоминания (для повторения - всегда виден)
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
                 ),
-              ] else ...[
-                // Навигационные кнопки (если слово ещё не открыто)
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: _prevWord,
-                          child: Opacity(
-                            opacity: isFirstWord ? 0.5 : 1.0,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Flexible(
-                                  child: Text(
-                                    'Я уже знаю\\nэто слово',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      height: 1.3,
-                                      color: Colors.grey.shade700,
-                                      fontFamily: 'Manrope',
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 8),
-                                const Icon(Icons.chevron_left, size: 24, color: Colors.grey),
-                              ],
-                            ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Заголовок
+                    const Text(
+                      'Как сложно было вспомнить?',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: 'Roboto',
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    // Кнопка "Показать снова" справа в углу (под заголовком)
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: GestureDetector(
+                        onTap: _sendToReview,
+                        child: Text(
+                          'Показать снова',
+                          style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w500,
+                            color: orangeColor,
+                            fontFamily: 'Manrope',
                           ),
                         ),
                       ),
-                      const SizedBox(width: 24),
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: _nextWord,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Icon(Icons.chevron_right, size: 24, color: Colors.grey),
-                              const SizedBox(width: 8),
-                              Flexible(
-                                child: Text(
-                                  'Начать учить\\nэто слово',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    height: 1.3,
-                                    color: Colors.grey.shade700,
-                                    fontFamily: 'Manrope',
-                                  ),
-                                ),
-                              ),
-                            ],
+                    ),
+                    const SizedBox(height: 12),
+                    // Кнопки сложности на всю ширину (уменьшенные)
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _buildDifficultyButton(
+                            'Легко',
+                            '4 дня',
+                            Colors.green,
+                            () => _handleDifficultySelection('easy'),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: _buildDifficultyButton(
+                            'Нормально',
+                            '2 дня',
+                            orangeColor,
+                            () => _handleDifficultySelection('normal'),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: _buildDifficultyButton(
+                            'Сложно',
+                            '1 день',
+                            Colors.red.shade400,
+                            () => _handleDifficultySelection('hard'),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ],
           ),
         ),
