@@ -16,6 +16,7 @@ class _LearnScreenState extends State<LearnScreen> {
   
   int _currentWordIndex = 0;
   bool _isRevealed = false;
+  bool _isImageRevealed = false;
   
   // Пример данных для слов
   final List<Map<String, dynamic>> _words = [
@@ -59,6 +60,7 @@ class _LearnScreenState extends State<LearnScreen> {
       setState(() {
         _currentWordIndex++;
         _isRevealed = false;
+        _isImageRevealed = false;
       });
     } else {
       _showCompletionDialog();
@@ -70,6 +72,7 @@ class _LearnScreenState extends State<LearnScreen> {
       setState(() {
         _currentWordIndex--;
         _isRevealed = false;
+        _isImageRevealed = false;
       });
     }
   }
@@ -217,25 +220,40 @@ class _LearnScreenState extends State<LearnScreen> {
           child: Column(
             children: [
               // Progress bar with back arrow
-              Stack(
+              Row(
                 children: [
-                  LinearProgressIndicator(
-                    value: (_currentWordIndex + 1) / _words.length,
-                    backgroundColor: Colors.grey.shade300,
-                    valueColor: AlwaysStoppedAnimation<Color>(orangeColor),
-                    minHeight: 6,
-                    borderRadius: BorderRadius.circular(3),
+                  Expanded(
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        LinearProgressIndicator(
+                          value: (_currentWordIndex + 1) / _words.length,
+                          backgroundColor: Colors.grey.shade300,
+                          valueColor: AlwaysStoppedAnimation<Color>(orangeColor),
+                          minHeight: 6,
+                          borderRadius: BorderRadius.circular(3),
+                        ),
+                      ],
+                    ),
                   ),
                   if (!isFirstWord)
-                    Positioned(
-                      right: 0,
-                      top: -6,
-                      bottom: -6,
-                      child: IconButton(
-                        icon: const Icon(Icons.arrow_back, size: 20, color: Colors.black54),
-                        onPressed: _prevWord,
-                        padding: EdgeInsets.zero,
-                        constraints: const BoxConstraints(),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8),
+                      child: GestureDetector(
+                        onTap: _prevWord,
+                        child: Container(
+                          width: 28,
+                          height: 28,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey.shade400, width: 1.5),
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: const Icon(
+                            Icons.arrow_back_rounded,
+                            size: 18,
+                            color: Colors.black54,
+                          ),
+                        ),
                       ),
                     ),
                 ],
@@ -295,45 +313,82 @@ class _LearnScreenState extends State<LearnScreen> {
                         const SizedBox(height: 24),
                         
                         // Silhouette image placeholder
-                        Center(
-                          child: Container(
-                            width: 120,
-                            height: 120,
-                            decoration: BoxDecoration(
-                              color: Colors.grey.shade200,
-                              borderRadius: BorderRadius.circular(16),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              width: 160,
+                              height: 160,
+                              decoration: BoxDecoration(
+                                color: _isImageRevealed ? Colors.white : Colors.grey.shade200,
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(16),
+                                child: _isImageRevealed
+                                    ? Image.network(
+                                        'https://picsum.photos/160/160',
+                                        fit: BoxFit.cover,
+                                        errorBuilder: (context, error, stackTrace) => Icon(
+                                          Icons.image_outlined,
+                                          size: 60,
+                                          color: Colors.grey.shade400,
+                                        ),
+                                      )
+                                    : Icon(
+                                        Icons.image_outlined,
+                                        size: 60,
+                                        color: Colors.grey.shade400,
+                                      ),
+                              ),
                             ),
-                            child: Icon(
-                              Icons.image_outlined,
-                              size: 60,
-                              color: Colors.grey.shade400,
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'Новое слово',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.grey,
+                                      fontFamily: 'Manrope',
+                                    ),
+                                  ),
+                                  const SizedBox(height: 2),
+                                  Text(
+                                    '${currentWord['dictionary']} - ${currentWord['category']}',
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.grey,
+                                      fontFamily: 'Manrope',
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
+                          ],
                         ),
                         const SizedBox(height: 24),
                         
                         // Word in bold
-                        Center(
-                          child: Text(
-                            currentWord['word'] as String,
-                            style: const TextStyle(
-                              fontSize: 32,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Roboto',
-                            ),
+                        Text(
+                          currentWord['word'] as String,
+                          style: const TextStyle(
+                            fontSize: 32,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Roboto',
                           ),
                         ),
                         const SizedBox(height: 8),
                         
                         // Transcription
-                        Center(
-                          child: Text(
-                            currentWord['transcription'] as String,
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.grey.shade600,
-                              fontFamily: 'Manrope',
-                            ),
+                        Text(
+                          currentWord['transcription'] as String,
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey.shade600,
+                            fontFamily: 'Manrope',
                           ),
                         ),
                         const SizedBox(height: 32),
@@ -345,18 +400,19 @@ class _LearnScreenState extends State<LearnScreen> {
                               onTap: () {
                                 setState(() {
                                   _isRevealed = true;
+                                  _isImageRevealed = true;
                                 });
                               },
                               child: Container(
-                                width: 80,
-                                height: 80,
+                                width: 100,
+                                height: 100,
                                 decoration: BoxDecoration(
                                   border: Border.all(color: Colors.grey.shade400, width: 2),
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: const Icon(
                                   Icons.visibility_outlined,
-                                  size: 40,
+                                  size: 50,
                                   color: Colors.grey,
                                 ),
                               ),
@@ -366,6 +422,9 @@ class _LearnScreenState extends State<LearnScreen> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              // Divider line
+                              const Divider(height: 1, thickness: 1),
+                              const SizedBox(height: 16),
                               // Translation in bold
                               Text(
                                 currentWord['translation'] as String,
@@ -399,19 +458,23 @@ class _LearnScreenState extends State<LearnScreen> {
               ),
               const SizedBox(height: 24),
               
-              // Navigation buttons
-              Row(
-                children: [
-                  Expanded(
-                    child: GestureDetector(
+              // Navigation buttons inside CardView
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    GestureDetector(
                       onTap: isFirstWord ? null : _prevWord,
                       child: Opacity(
                         opacity: isFirstWord ? 0.5 : 1.0,
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Icon(Icons.arrow_back, size: 20),
-                            const SizedBox(width: 8),
                             Text(
                               'Я уже знаю слово',
                               style: TextStyle(
@@ -420,17 +483,18 @@ class _LearnScreenState extends State<LearnScreen> {
                                 fontFamily: 'Manrope',
                               ),
                             ),
+                            const SizedBox(width: 8),
+                            const Icon(Icons.arrow_back, size: 20, color: Colors.grey),
                           ],
                         ),
                       ),
                     ),
-                  ),
-                  Expanded(
-                    child: GestureDetector(
+                    GestureDetector(
                       onTap: _nextWord,
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
+                          const Icon(Icons.arrow_forward, size: 20, color: Colors.grey),
+                          const SizedBox(width: 8),
                           Text(
                             'Начать учить это слово',
                             style: TextStyle(
@@ -439,13 +503,11 @@ class _LearnScreenState extends State<LearnScreen> {
                               fontFamily: 'Manrope',
                             ),
                           ),
-                          const SizedBox(width: 8),
-                          const Icon(Icons.arrow_forward, size: 20),
                         ],
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ],
           ),
@@ -460,18 +522,21 @@ class _LearnScreenState extends State<LearnScreen> {
       collapsedIconColor: Colors.grey,
       iconColor: Colors.grey,
       leading: const Icon(Icons.chevron_right, size: 20),
-      title: _buildHighlightedText(
-        english,
-        word,
-        TextStyle(
-          fontSize: 14,
-          fontFamily: 'Manrope',
-          color: Colors.grey.shade700,
+      title: Padding(
+        padding: const EdgeInsets.only(right: 16),
+        child: _buildHighlightedText(
+          english,
+          word,
+          TextStyle(
+            fontSize: 14,
+            fontFamily: 'Manrope',
+            color: Colors.grey.shade700,
+          ),
         ),
       ),
       children: [
         Padding(
-          padding: const EdgeInsets.only(left: 36, bottom: 8, right: 16),
+          padding: const EdgeInsets.only(left: 20, bottom: 8, right: 16),
           child: _buildHighlightedText(
             russian,
             word,
