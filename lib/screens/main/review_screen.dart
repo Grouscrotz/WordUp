@@ -225,7 +225,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
           child: Column(
             children: [
               // Progress bar with back arrow
@@ -239,26 +239,26 @@ class _ReviewScreenState extends State<ReviewScreen> {
                           value: (_currentWordIndex + 1) / _words.length,
                           backgroundColor: Colors.grey.shade300,
                           valueColor: AlwaysStoppedAnimation<Color>(orangeColor),
-                          minHeight: 6,
-                          borderRadius: BorderRadius.circular(3),
+                          minHeight: 4,
+                          borderRadius: BorderRadius.circular(2),
                         ),
                       ],
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 12),
+                    padding: const EdgeInsets.only(left: 8),
                     child: GestureDetector(
                       onTap: _prevWord,
                       child: Container(
-                        width: 32,
-                        height: 32,
+                        width: 28,
+                        height: 28,
                         decoration: BoxDecoration(
                           border: Border.all(color: Colors.grey.shade400, width: 1.5),
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(6),
                         ),
                         child: const Icon(
                           Icons.arrow_back_rounded,
-                          size: 18,
+                          size: 16,
                           color: Colors.black54,
                         ),
                       ),
@@ -266,7 +266,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
                   ),
                 ],
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 12),
               
               // Word card
               Expanded(
@@ -430,12 +430,12 @@ class _ReviewScreenState extends State<ReviewScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 8),
               
               // CardView оценки сложности вспоминания (для повторения - всегда виден)
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+                padding: const EdgeInsets.fromLTRB(16, 10, 16, 8),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(20),
@@ -501,6 +501,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
                         ),
                       ],
                     ),
+                    const SizedBox(height: 8),
                   ],
                 ),
               ),
