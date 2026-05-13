@@ -249,7 +249,7 @@ class _LearnScreenState extends State<LearnScreen> {
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: const Icon(
-                            Icons.arrow_back,
+                            Icons.arrow_back_rounded,
                             size: 18,
                             color: Colors.black54,
                           ),
@@ -272,7 +272,7 @@ class _LearnScreenState extends State<LearnScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Small gray square and header
+                        // Small gray square and header - removed duplicate, keeping only one on the left
                         Row(
                           children: [
                             Container(
@@ -284,41 +284,40 @@ class _LearnScreenState extends State<LearnScreen> {
                               ),
                             ),
                             const SizedBox(width: 12),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text(
-                                    'Новое слово',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.grey,
-                                      fontFamily: 'Manrope',
-                                    ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Новое слово',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey,
+                                    fontFamily: 'Manrope',
                                   ),
-                                  const SizedBox(height: 2),
-                                  Text(
-                                    '${currentWord['dictionary']} - ${currentWord['category']}',
-                                    style: const TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.grey,
-                                      fontFamily: 'Manrope',
-                                    ),
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  '${currentWord['dictionary']} - ${currentWord['category']}',
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey,
+                                    fontFamily: 'Manrope',
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
                         const SizedBox(height: 24),
                         
-                        // Silhouette image placeholder with header info aligned left
-                        Row(
+                        // Image and word info - image on left, word below image
+                        Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            // Image container
                             Container(
-                              width: 160,
-                              height: 160,
+                              width: double.infinity,
+                              height: 200,
                               decoration: BoxDecoration(
                                 color: _isImageRevealed ? Colors.white : Colors.grey.shade200,
                                 borderRadius: BorderRadius.circular(16),
@@ -327,44 +326,38 @@ class _LearnScreenState extends State<LearnScreen> {
                                 borderRadius: BorderRadius.circular(16),
                                 child: _isImageRevealed
                                     ? Image.network(
-                                        'https://picsum.photos/160/160',
+                                        'https://picsum.photos/400/300',
                                         fit: BoxFit.cover,
                                         errorBuilder: (context, error, stackTrace) => Icon(
                                           Icons.image_outlined,
-                                          size: 60,
+                                          size: 80,
                                           color: Colors.grey.shade400,
                                         ),
                                       )
                                     : Icon(
                                         Icons.image_outlined,
-                                        size: 60,
+                                        size: 80,
                                         color: Colors.grey.shade400,
                                       ),
                               ),
                             ),
-                            const SizedBox(width: 16),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    currentWord['word'] as String,
-                                    style: const TextStyle(
-                                      fontSize: 32,
-                                      fontWeight: FontWeight.bold,
-                                      fontFamily: 'Roboto',
-                                    ),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Text(
-                                    currentWord['transcription'] as String,
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.grey.shade600,
-                                      fontFamily: 'Manrope',
-                                    ),
-                                  ),
-                                ],
+                            const SizedBox(height: 16),
+                            // Word and transcription aligned left
+                            Text(
+                              currentWord['word'] as String,
+                              style: const TextStyle(
+                                fontSize: 32,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Roboto',
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              currentWord['transcription'] as String,
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.grey.shade600,
+                                fontFamily: 'Manrope',
                               ),
                             ),
                           ],
@@ -382,15 +375,15 @@ class _LearnScreenState extends State<LearnScreen> {
                                 });
                               },
                               child: Container(
-                                width: 120,
-                                height: 120,
+                                width: 140,
+                                height: 140,
                                 decoration: BoxDecoration(
                                   border: Border.all(color: Colors.grey.shade400, width: 2),
-                                  borderRadius: BorderRadius.circular(12),
+                                  borderRadius: BorderRadius.circular(16),
                                 ),
                                 child: const Icon(
                                   Icons.visibility_outlined,
-                                  size: 60,
+                                  size: 70,
                                   color: Colors.grey,
                                 ),
                               ),
@@ -436,7 +429,7 @@ class _LearnScreenState extends State<LearnScreen> {
               ),
               const SizedBox(height: 24),
               
-              // Navigation buttons inside CardView - two rows to fit text
+              // Navigation buttons inside CardView - centered with chevrons
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
@@ -444,90 +437,58 @@ class _LearnScreenState extends State<LearnScreen> {
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(20),
                 ),
-                child: Column(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        GestureDetector(
-                          onTap: isFirstWord ? null : _prevWord,
-                          child: Opacity(
-                            opacity: isFirstWord ? 0.5 : 1.0,
-                            child: Row(
-                              children: [
-                                const Icon(Icons.chevron_left, size: 20, color: Colors.grey),
-                                const SizedBox(width: 4),
-                                Text(
-                                  'Я уже знаю',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.grey.shade700,
-                                    fontFamily: 'Manrope',
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: _nextWord,
+                    // Left button: "Я уже знаю это слово"
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: isFirstWord ? null : _prevWord,
+                        child: Opacity(
+                          opacity: isFirstWord ? 0.5 : 1.0,
                           child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                'Начать учить',
+                                'Я уже знаю\nэто слово',
+                                textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontSize: 14,
+                                  height: 1.3,
                                   color: Colors.grey.shade700,
                                   fontFamily: 'Manrope',
                                 ),
                               ),
-                              const SizedBox(width: 4),
-                              const Icon(Icons.chevron_right, size: 20, color: Colors.grey),
+                              const SizedBox(width: 8),
+                              const Icon(Icons.chevron_left, size: 24, color: Colors.grey),
                             ],
                           ),
                         ),
-                      ],
+                      ),
                     ),
-                    const SizedBox(height: 8),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        GestureDetector(
-                          onTap: isFirstWord ? null : _prevWord,
-                          child: Opacity(
-                            opacity: isFirstWord ? 0.5 : 1.0,
-                            child: Row(
-                              children: [
-                                const SizedBox(width: 24),
-                                Text(
-                                  'это слово',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.grey.shade700,
-                                    fontFamily: 'Manrope',
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: _nextWord,
-                          child: Row(
-                            children: [
-                              const SizedBox(width: 24),
-                              Text(
-                                'это слово',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.grey.shade700,
-                                  fontFamily: 'Manrope',
-                                ),
+                    const SizedBox(width: 24),
+                    // Right button: "Начать учить это слово"
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: _nextWord,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(Icons.chevron_right, size: 24, color: Colors.grey),
+                            const SizedBox(width: 8),
+                            Text(
+                              'Начать учить\nэто слово',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 14,
+                                height: 1.3,
+                                color: Colors.grey.shade700,
+                                fontFamily: 'Manrope',
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
                   ],
                 ),
@@ -546,26 +507,32 @@ class _LearnScreenState extends State<LearnScreen> {
       leading: const Icon(Icons.chevron_right, size: 20),
       title: Padding(
         padding: const EdgeInsets.only(left: 0, right: 16),
-        child: _buildHighlightedText(
-          english,
-          word,
-          TextStyle(
-            fontSize: 14,
-            fontFamily: 'Manrope',
-            color: Colors.grey.shade700,
+        child: Align(
+          alignment: Alignment.centerLeft,
+          child: _buildHighlightedText(
+            english,
+            word,
+            TextStyle(
+              fontSize: 14,
+              fontFamily: 'Manrope',
+              color: Colors.grey.shade700,
+            ),
           ),
         ),
       ),
       children: [
         Padding(
           padding: const EdgeInsets.only(left: 0, bottom: 8, right: 16),
-          child: _buildHighlightedText(
-            russian,
-            word,
-            TextStyle(
-              fontSize: 14,
-              fontFamily: 'Manrope',
-              color: Colors.grey.shade600,
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: _buildHighlightedText(
+              russian,
+              word,
+              TextStyle(
+                fontSize: 14,
+                fontFamily: 'Manrope',
+                color: Colors.grey.shade600,
+              ),
             ),
           ),
         ),
