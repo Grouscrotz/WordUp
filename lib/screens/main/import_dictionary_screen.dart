@@ -236,10 +236,11 @@ class _ImportDictionaryScreenState extends State<ImportDictionaryScreen> {
         centerTitle: true,
       ),
       body: SafeArea(
-        child: Padding(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
             children: [
               // Info card
               Container(
@@ -746,7 +747,7 @@ class _ImportDictionaryScreenState extends State<ImportDictionaryScreen> {
               ),
               ],
               
-              const Spacer(),
+              const SizedBox(height: 24),
               
               // Import button
               Center(

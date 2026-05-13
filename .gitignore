@@ -5,10 +5,10 @@ __pycache__/
 *.o
 *.obj
 *.class
+*.exe
 *.dll
 *.so
 *.a
-*.exe
 *.out
 
 # Dependencies
@@ -19,55 +19,24 @@ venv/
 .env.local
 .env.*
 
-# Build outputs
-dist/
-build/
-target/
-.gradle/
-
-# Logs and temporary files
+# Logs and temp files
 *.log
 *.tmp
 *.swp
 *.swo
-
-# OS generated files
-.DS_Store
-Thumbs.db
 
 # Coverage reports
 coverage/
 htmlcov/
 .coverage
 
-# IDE specific
+# Editors
 .vscode/
 .idea/
-*.iml
-*.ipr
-*.iws
 
-# Python specific
-*.py[cod]
-*$py.class
-*.so
-.Python
-env/
-bin/
-include/
-lib/
-lib64/
-pyvenv.cfg
-pip-log.txt
-pip-delete-this-directory.txt
-.tox/
-.coverage.*
-.cache/
-nosetests.xml
-coverage.xml
-*.cover
-*.log
-.git/
+# System files
+.DS_Store
+Thumbs.db
 
 # Compressed files
 *.zip
@@ -92,4 +61,35 @@ coverage.xml
 *.tar.bz2
 *.tar.xz
 *.tar.zst
+
+# Python specific
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+.Python
+*.so
+.Python
+*.egg-info/
+.eggs/
+.mypy_cache/
+.pytest_cache/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.log
+.git/
+
+# Dart/Flutter specific
+.dart_tool/
+.packages
+.pub-cache/
+.pub/
+build/
+*.g.dart
+
 ```
