@@ -453,95 +453,79 @@ class _LearnScreenState extends State<LearnScreen> {
               
               // Верхняя панель с кнопкой "Показать снова" и кнопки сложности (только для режима повторения)
               if (widget.mode == 'review' && _isRevealed) ...[
-                Stack(
-                  children: [
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.fromLTRB(24, 40, 24, 16),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.fromLTRB(16, 32, 16, 0),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Заголовок и кнопка "Показать снова" в одном ряду
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           const Text(
                             'Как сложно было вспомнить?',
                             style: TextStyle(
-                              fontSize: 16,
+                              fontSize: 14,
                               fontWeight: FontWeight.w600,
                               fontFamily: 'Roboto',
                             ),
                           ),
-                          const SizedBox(height: 16),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: _buildDifficultyButton(
-                                  'Легко',
-                                  '4 дня',
-                                  Colors.green,
-                                  () => _handleDifficultySelection('easy'),
-                                ),
+                          GestureDetector(
+                            onTap: _sendToReview,
+                            child: Text(
+                              'Показать снова',
+                              style: TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w500,
+                                color: orangeColor,
+                                fontFamily: 'Manrope',
                               ),
-                              Expanded(
-                                child: _buildDifficultyButton(
-                                  'Нормально',
-                                  '2 дня',
-                                  orangeColor,
-                                  () => _handleDifficultySelection('normal'),
-                                ),
-                              ),
-                              Expanded(
-                                child: _buildDifficultyButton(
-                                  'Сложно',
-                                  '1 день',
-                                  Colors.red.shade400,
-                                  () => _handleDifficultySelection('hard'),
-                                ),
-                              ),
-                            ],
+                            ),
                           ),
                         ],
                       ),
-                    ),
-                    // Кнопка "Показать снова" вверху справа
-                    Positioned(
-                      top: 8,
-                      right: 8,
-                      child: GestureDetector(
-                        onTap: _sendToReview,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                          decoration: BoxDecoration(
-                            color: orangeColor.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(8),
+                      const SizedBox(height: 12),
+                      // Кнопки сложности на всю ширину
+                      Row(
+                        children: [
+                          Expanded(
+                            child: _buildDifficultyButton(
+                              'Легко',
+                              '4 дня',
+                              Colors.green,
+                              () => _handleDifficultySelection('easy'),
+                            ),
                           ),
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.refresh,
-                                size: 16,
-                                color: orangeColor,
-                              ),
-                              const SizedBox(width: 4),
-                              Text(
-                                'Показать снова',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500,
-                                  color: orangeColor,
-                                  fontFamily: 'Manrope',
-                                ),
-                              ),
-                            ],
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: _buildDifficultyButton(
+                              'Нормально',
+                              '2 дня',
+                              orangeColor,
+                              () => _handleDifficultySelection('normal'),
+                            ),
                           ),
-                        ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: _buildDifficultyButton(
+                              'Сложно',
+                              '1 день',
+                              Colors.red.shade400,
+                              () => _handleDifficultySelection('hard'),
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
+                      const SizedBox(height: 16),
+                    ],
+                  ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 0),
               ] else ...[
                 // Навигационные кнопки (для новых слов или если слово ещё не открыто)
                 Container(
@@ -623,10 +607,10 @@ class _LearnScreenState extends State<LearnScreen> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
         decoration: BoxDecoration(
           color: color.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(8),
           border: Border.all(color: color.withOpacity(0.3), width: 1),
         ),
         child: Column(
@@ -634,17 +618,17 @@ class _LearnScreenState extends State<LearnScreen> {
             Text(
               label,
               style: TextStyle(
-                fontSize: 15,
+                fontSize: 12,
                 fontWeight: FontWeight.w600,
                 color: color,
                 fontFamily: 'Roboto',
               ),
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: 2),
             Text(
               days,
               style: TextStyle(
-                fontSize: 12,
+                fontSize: 10,
                 color: Colors.grey.shade600,
                 fontFamily: 'Manrope',
               ),
