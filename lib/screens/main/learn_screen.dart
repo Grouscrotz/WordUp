@@ -17,7 +17,6 @@ class _LearnScreenState extends State<LearnScreen> {
   int _currentWordIndex = 0;
   bool _isRevealed = false;
   bool _isImageRevealed = false;
-  bool _sendToReviewQueue = false; // Флаг для отправки слова в конец колоды
   
   // Интервалы повторения в днях для разных уровней сложности
   final Map<String, int> _repetitionIntervals = {
@@ -69,19 +68,13 @@ class _LearnScreenState extends State<LearnScreen> {
     debugPrint('Слово "${_words[_currentWordIndex]['word']}" оценено как: $difficulty');
     debugPrint('Следующее повторение через: ${_repetitionIntervals[difficulty]} дн.');
     
-    if (_sendToReviewQueue) {
-      // Логика отправки слова в конец колоды (будет реализована позже)
-      debugPrint('Слово отправлено в конец колоды для повторения');
-      _sendToReviewQueue = false; // Сбрасываем флаг
-    }
-    
     _nextWord();
   }
 
-  void _toggleSendToReview() {
-    setState(() {
-      _sendToReviewQueue = !_sendToReviewQueue;
-    });
+  void _sendToReview() {
+    // Логика отправки слова в конец колоды (будет реализована позже)
+    debugPrint('Слово отправлено в конец колоды для повторения');
+    _nextWord();
   }
 
   void _nextWord() {
@@ -458,98 +451,86 @@ class _LearnScreenState extends State<LearnScreen> {
               ),
               const SizedBox(height: 24),
               
-              // Кнопки выбора сложности (только для режима повторения)
+              // Верхняя панель с кнопкой "Показать снова" и кнопки сложности (только для режима повторения)
               if (widget.mode == 'review' && _isRevealed) ...[
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Как сложно было вспомнить?',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          fontFamily: 'Roboto',
-                        ),
+                Stack(
+                  children: [
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.fromLTRB(24, 40, 24, 16),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20),
                       ),
-                      const SizedBox(height: 16),
-                      Row(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Expanded(
-                            flex: 1,
-                            child: _buildDifficultyButton(
-                              'Легко',
-                              '4 дня',
-                              Colors.green,
-                              () => _handleDifficultySelection('easy'),
+                          const Text(
+                            'Как сложно было вспомнить?',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              fontFamily: 'Roboto',
                             ),
                           ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            flex: 1,
-                            child: _buildDifficultyButton(
-                              'Нормально',
-                              '2 дня',
-                              orangeColor,
-                              () => _handleDifficultySelection('normal'),
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            flex: 1,
-                            child: _buildDifficultyButton(
-                              'Сложно',
-                              '1 день',
-                              Colors.red.shade400,
-                              () => _handleDifficultySelection('hard'),
-                            ),
+                          const SizedBox(height: 16),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: _buildDifficultyButton(
+                                  'Легко',
+                                  '4 дня',
+                                  Colors.green,
+                                  () => _handleDifficultySelection('easy'),
+                                ),
+                              ),
+                              Expanded(
+                                child: _buildDifficultyButton(
+                                  'Нормально',
+                                  '2 дня',
+                                  orangeColor,
+                                  () => _handleDifficultySelection('normal'),
+                                ),
+                              ),
+                              Expanded(
+                                child: _buildDifficultyButton(
+                                  'Сложно',
+                                  '1 день',
+                                  Colors.red.shade400,
+                                  () => _handleDifficultySelection('hard'),
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                      const SizedBox(height: 12),
-                      // Кнопка "Показать снова в конце колоды"
-                      GestureDetector(
-                        onTap: _toggleSendToReview,
+                    ),
+                    // Кнопка "Показать снова" вверху справа
+                    Positioned(
+                      top: 8,
+                      right: 8,
+                      child: GestureDetector(
+                        onTap: _sendToReview,
                         child: Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                           decoration: BoxDecoration(
-                            color: _sendToReviewQueue 
-                                ? orangeColor.withOpacity(0.15) 
-                                : Colors.grey.shade100,
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: _sendToReviewQueue 
-                                  ? orangeColor.withOpacity(0.5) 
-                                  : Colors.grey.shade300,
-                              width: 1.5,
-                            ),
+                            color: orangeColor.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(8),
                           ),
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Icon(
                                 Icons.refresh,
-                                size: 20,
-                                color: _sendToReviewQueue 
-                                    ? orangeColor 
-                                    : Colors.grey.shade600,
+                                size: 16,
+                                color: orangeColor,
                               ),
-                              const SizedBox(width: 8),
+                              const SizedBox(width: 4),
                               Text(
-                                'Показать снова в конце колоды',
+                                'Показать снова',
                                 style: TextStyle(
-                                  fontSize: 14,
+                                  fontSize: 12,
                                   fontWeight: FontWeight.w500,
-                                  color: _sendToReviewQueue 
-                                      ? orangeColor 
-                                      : Colors.grey.shade700,
+                                  color: orangeColor,
                                   fontFamily: 'Manrope',
                                 ),
                               ),
@@ -557,8 +538,8 @@ class _LearnScreenState extends State<LearnScreen> {
                           ),
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 16),
               ] else ...[
