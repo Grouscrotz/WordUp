@@ -15,22 +15,50 @@ class _LearnScreenState extends State<LearnScreen> {
   final Color backgroundColor = const Color(0xFFEFEFEF);
   
   int _currentWordIndex = 0;
-  bool _isFlipped = false;
+  bool _isRevealed = false;
   
   // Пример данных для слов
-  final List<Map<String, String>> _words = [
-    {'word': 'Achieve', 'translation': 'Достигать', 'example': 'She achieved her goal.'},
-    {'word': 'Benefit', 'translation': 'Преимущество', 'example': 'The benefit of exercise is clear.'},
-    {'word': 'Challenge', 'translation': 'Вызов', 'example': 'This is a big challenge.'},
-    {'word': 'Develop', 'translation': 'Развивать', 'example': 'Develop your skills daily.'},
-    {'word': 'Enable', 'translation': 'Позволять', 'example': 'This enables us to work faster.'},
+  final List<Map<String, dynamic>> _words = [
+    {
+      'word': 'Expensive',
+      'transcription': "[ik'speniv]",
+      'translation': 'дорогой (по цене)',
+      'dictionary': 'Oxford 3000 & 5000',
+      'category': 'А1',
+      'examples': [
+        {'en': 'This car is too expensive for me.', 'ru': 'Эта машина слишком дорогая для меня.'},
+        {'en': 'The restaurant was expensive but good.', 'ru': 'Ресторан был дорогим, но хорошим.'},
+      ],
+    },
+    {
+      'word': 'Beautiful',
+      'transcription': "['bju:tifl]",
+      'translation': 'красивый',
+      'dictionary': 'Oxford 3000 & 5000',
+      'category': 'А2',
+      'examples': [
+        {'en': 'She has a beautiful voice.', 'ru': 'У неё красивый голос.'},
+        {'en': 'The view was beautiful.', 'ru': 'Вид был красивым.'},
+      ],
+    },
+    {
+      'word': 'Interesting',
+      'transcription': "['intristɪŋ]",
+      'translation': 'интересный',
+      'dictionary': 'New General Service List',
+      'category': 'B1',
+      'examples': [
+        {'en': 'This is an interesting book.', 'ru': 'Это интересная книга.'},
+        {'en': 'I find history very interesting.', 'ru': 'Я нахожу историю очень интересной.'},
+      ],
+    },
   ];
 
   void _nextWord() {
     if (_currentWordIndex < _words.length - 1) {
       setState(() {
         _currentWordIndex++;
-        _isFlipped = false;
+        _isRevealed = false;
       });
     } else {
       _showCompletionDialog();
@@ -41,7 +69,7 @@ class _LearnScreenState extends State<LearnScreen> {
     if (_currentWordIndex > 0) {
       setState(() {
         _currentWordIndex--;
-        _isFlipped = false;
+        _isRevealed = false;
       });
     }
   }
@@ -118,6 +146,31 @@ class _LearnScreenState extends State<LearnScreen> {
     );
   }
 
+  String _highlightWordInText(String text, String word, bool isBold) {
+    return text.replaceAllMapped(
+      RegExp(word, caseSensitive: false),
+      (match) => isBold ? '**${match.group(0)}**' : match.group(0)!,
+    );
+  }
+
+  Widget _buildHighlightedText(String text, String word, TextStyle style) {
+    final pattern = RegExp('(${word})', caseSensitive: false);
+    final parts = text.split(pattern);
+    
+    return RichText(
+      text: TextSpan(
+        style: style,
+        children: parts.map((part) {
+          final isWord = part.toLowerCase() == word.toLowerCase();
+          return TextSpan(
+            text: part,
+            style: isWord ? const TextStyle(fontWeight: FontWeight.bold) : null,
+          );
+        }).toList(),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final currentWord = _words[_currentWordIndex];
@@ -163,95 +216,183 @@ class _LearnScreenState extends State<LearnScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
           child: Column(
             children: [
-              // Progress bar
-              LinearProgressIndicator(
-                value: (_currentWordIndex + 1) / _words.length,
-                backgroundColor: Colors.grey.shade300,
-                valueColor: AlwaysStoppedAnimation<Color>(orangeColor),
-                minHeight: 6,
-                borderRadius: BorderRadius.circular(3),
+              // Progress bar with back arrow
+              Stack(
+                children: [
+                  LinearProgressIndicator(
+                    value: (_currentWordIndex + 1) / _words.length,
+                    backgroundColor: Colors.grey.shade300,
+                    valueColor: AlwaysStoppedAnimation<Color>(orangeColor),
+                    minHeight: 6,
+                    borderRadius: BorderRadius.circular(3),
+                  ),
+                  if (!isFirstWord)
+                    Positioned(
+                      right: 0,
+                      top: -6,
+                      bottom: -6,
+                      child: IconButton(
+                        icon: const Icon(Icons.arrow_back, size: 20, color: Colors.black54),
+                        onPressed: _prevWord,
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                      ),
+                    ),
+                ],
               ),
               const SizedBox(height: 24),
               
               // Word card
               Expanded(
-                child: GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      _isFlipped = !_isFlipped;
-                    });
-                  },
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 300),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.05),
-                          blurRadius: 10,
-                          offset: const Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(24),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(24),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Small gray square and header
+                        Row(
                           children: [
-                            Icon(
-                              _isFlipped 
-                                ? Icons.school 
-                                : Icons.auto_awesome,
-                              size: 48,
-                              color: _isFlipped ? Colors.blue : Colors.green,
-                            ),
-                            const SizedBox(height: 24),
-                            Text(
-                              _isFlipped ? currentWord['translation']! : currentWord['word']!,
-                              style: const TextStyle(
-                                fontSize: 32,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: 'Roboto',
+                            Container(
+                              width: 12,
+                              height: 12,
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade400,
+                                borderRadius: BorderRadius.circular(2),
                               ),
-                              textAlign: TextAlign.center,
                             ),
-                            if (_isFlipped) ...[
-                              const SizedBox(height: 16),
-                              Container(
-                                padding: const EdgeInsets.all(16),
-                                decoration: BoxDecoration(
-                                  color: backgroundColor,
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      currentWord['example']!,
-                                      style: const TextStyle(
-                                        fontSize: 16,
-                                        fontStyle: FontStyle.italic,
-                                        fontFamily: 'Manrope',
-                                      ),
-                                      textAlign: TextAlign.center,
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'Новое слово',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.grey,
+                                      fontFamily: 'Manrope',
                                     ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                            const SizedBox(height: 32),
-                            Text(
-                              _isFlipped ? 'Нажмите, чтобы продолжить' : 'Нажмите, чтобы увидеть перевод',
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.grey.shade500,
-                                fontFamily: 'Manrope',
+                                  ),
+                                  const SizedBox(height: 2),
+                                  Text(
+                                    '${currentWord['dictionary']} - ${currentWord['category']}',
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.grey,
+                                      fontFamily: 'Manrope',
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ],
                         ),
-                      ),
+                        const SizedBox(height: 24),
+                        
+                        // Silhouette image placeholder
+                        Center(
+                          child: Container(
+                            width: 120,
+                            height: 120,
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade200,
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: Icon(
+                              Icons.image_outlined,
+                              size: 60,
+                              color: Colors.grey.shade400,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                        
+                        // Word in bold
+                        Center(
+                          child: Text(
+                            currentWord['word'] as String,
+                            style: const TextStyle(
+                              fontSize: 32,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Roboto',
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        
+                        // Transcription
+                        Center(
+                          child: Text(
+                            currentWord['transcription'] as String,
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.grey.shade600,
+                              fontFamily: 'Manrope',
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 32),
+                        
+                        // Reveal button or translation list
+                        if (!_isRevealed)
+                          Center(
+                            child: GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  _isRevealed = true;
+                                });
+                              },
+                              child: Container(
+                                width: 80,
+                                height: 80,
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.grey.shade400, width: 2),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: const Icon(
+                                  Icons.visibility_outlined,
+                                  size: 40,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ),
+                          )
+                        else
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Translation in bold
+                              Text(
+                                currentWord['translation'] as String,
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: 'Roboto',
+                                ),
+                              ),
+                              const SizedBox(height: 16),
+                              
+                              // Example sentences list
+                              ...(currentWord['examples'] as List<Map<String, String>>).asMap().entries.map((entry) {
+                                final index = entry.key;
+                                final example = entry.value;
+                                return Padding(
+                                  padding: const EdgeInsets.only(bottom: 12),
+                                  child: _buildExpandableExample(
+                                    example['en']!,
+                                    example['ru']!,
+                                    currentWord['word'] as String,
+                                  ),
+                                );
+                              }).toList(),
+                            ],
+                          ),
+                      ],
                     ),
                   ),
                 ),
@@ -262,34 +403,45 @@ class _LearnScreenState extends State<LearnScreen> {
               Row(
                 children: [
                   Expanded(
-                    child: OutlinedButton.icon(
-                      onPressed: isFirstWord ? null : _prevWord,
-                      icon: const Icon(Icons.arrow_back),
-                      label: const Text('Назад'),
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: Colors.grey.shade600,
-                        side: BorderSide(color: Colors.grey.shade300),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+                    child: GestureDetector(
+                      onTap: isFirstWord ? null : _prevWord,
+                      child: Opacity(
+                        opacity: isFirstWord ? 0.5 : 1.0,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(Icons.arrow_back, size: 20),
+                            const SizedBox(width: 8),
+                            Text(
+                              'Я уже знаю слово',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey.shade700,
+                                fontFamily: 'Manrope',
+                              ),
+                            ),
+                          ],
                         ),
-                        padding: const EdgeInsets.symmetric(vertical: 16),
                       ),
                     ),
                   ),
-                  const SizedBox(width: 16),
                   Expanded(
-                    child: ElevatedButton.icon(
-                      onPressed: _nextWord,
-                      icon: Icon(isLastWord ? Icons.check : Icons.arrow_forward),
-                      label: Text(isLastWord ? 'Готово' : 'Далее'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: orangeColor,
-                        foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        elevation: 0,
+                    child: GestureDetector(
+                      onTap: _nextWord,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Начать учить это слово',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey.shade700,
+                              fontFamily: 'Manrope',
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          const Icon(Icons.arrow_forward, size: 20),
+                        ],
                       ),
                     ),
                   ),
@@ -299,6 +451,38 @@ class _LearnScreenState extends State<LearnScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildExpandableExample(String english, String russian, String word) {
+    return ExpansionTile(
+      contentPadding: EdgeInsets.zero,
+      collapsedIconColor: Colors.grey,
+      iconColor: Colors.grey,
+      leading: const Icon(Icons.chevron_right, size: 20),
+      title: _buildHighlightedText(
+        english,
+        word,
+        TextStyle(
+          fontSize: 14,
+          fontFamily: 'Manrope',
+          color: Colors.grey.shade700,
+        ),
+      ),
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 36, bottom: 8, right: 16),
+          child: _buildHighlightedText(
+            russian,
+            word,
+            TextStyle(
+              fontSize: 14,
+              fontFamily: 'Manrope',
+              color: Colors.grey.shade600,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
