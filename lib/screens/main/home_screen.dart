@@ -48,6 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
           });
         },
         backgroundColor: Colors.white,
+        indicatorColor: const Color(0xFFEDE2D9),
         destinations: const [
           NavigationDestination(
             icon: Icon(Icons.menu_book_outlined),
