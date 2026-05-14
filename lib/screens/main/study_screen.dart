@@ -190,7 +190,7 @@ class _StudyScreenState extends State<StudyScreen> {
                           }
                           await Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => const LearnScreen(mode: 'review')),
+                            MaterialPageRoute(builder: (context) => const ReviewScreen()),
                           );
                         },
                         borderRadius: BorderRadius.circular(16),
