@@ -1,20 +1,35 @@
 ```
 # Dependencies
-.dart_tool/
-.build/
+.pub/
+.buildlog
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
 
-# Logs
-*.log
+# Build
+build/
+.dart_tool/
 
 # Environment
 .env
 .env.local
 *.env.*
 
-# OS generated files
+# Logs
+*.log
+
+# Temp files
+*.tmp
+*.swp
+
+# IDE
+.vscode/
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# OS
 .DS_Store
 Thumbs.db
-
-# Coverage
-coverage/
 ```

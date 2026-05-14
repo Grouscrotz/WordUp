@@ -502,26 +502,17 @@ class _LearnScreenState extends State<LearnScreen> {
                               ),
                               const SizedBox(height: 16),
                               
-                              // Example sentences header with eye icon
+                              // Example sentences header
                               if (currentWord.example != null && currentWord.example!.isNotEmpty) ...[
-                                Row(
-                                  children: [
-                                    Icon(
-                                      Icons.visibility_outlined,
-                                      size: 20,
-                                      color: Colors.grey.shade600,
-                                    ),
-                                    const SizedBox(width: 8),
-                                    const Text(
-                                      'Примеры:',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.grey,
-                                        fontFamily: 'Manrope',
-                                      ),
-                                    ),
-                                  ],
+                                const SizedBox(height: 16),
+                                const Text(
+                                  'Примеры:',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.grey,
+                                    fontFamily: 'Manrope',
+                                  ),
                                 ),
                                 const SizedBox(height: 8),
                                 
@@ -778,7 +769,7 @@ class _LearnScreenState extends State<LearnScreen> {
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
-        color: Colors.grey[200],
+        color: Colors.white,
         borderRadius: BorderRadius.circular(8),
       ),
       child: InkWell(
@@ -800,7 +791,7 @@ class _LearnScreenState extends State<LearnScreen> {
               Row(
                 children: [
                   Icon(
-                    isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_right,
+                    isExpanded ? Icons.chevron_up : Icons.chevron_right,
                     size: 20,
                     color: Colors.grey.shade600,
                   ),
