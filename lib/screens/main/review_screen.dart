@@ -466,7 +466,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
                             child: const Column(
                               children: [
                                 Text('Сложно', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
-                                Text('через 1 день', style: TextStyle(fontSize: 11, opacity: 0.8)),
+                                Text('через 1 день', style: TextStyle(fontSize: 11, color: Colors.white70)),
                               ],
                             ),
                           ),
@@ -484,7 +484,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
                             child: const Column(
                               children: [
                                 Text('Нормально', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
-                                Text('через 2 дня', style: TextStyle(fontSize: 11, opacity: 0.8)),
+                                Text('через 2 дня', style: TextStyle(fontSize: 11, color: Colors.white70)),
                               ],
                             ),
                           ),
@@ -502,7 +502,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
                             child: const Column(
                               children: [
                                 Text('Легко', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
-                                Text('через 4 дня', style: TextStyle(fontSize: 11, opacity: 0.8)),
+                                Text('через 4 дня', style: TextStyle(fontSize: 11, color: Colors.white70)),
                               ],
                             ),
                           ),
