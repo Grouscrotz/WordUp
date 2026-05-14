@@ -34,9 +34,8 @@ class Dictionary {
   });
 
   Map<String, dynamic> toMap({String? userId}) {
-    return {
+    final map = <String, dynamic>{
       'id': id,
-      'user_id': userId,
       'name': name,
       'description': description,
       'total_words': totalWords,
@@ -45,8 +44,14 @@ class Dictionary {
       'language_to': languageTo,
       'is_preset': isPreset ? 1 : 0,
       'created_at': createdAt.toIso8601String(),
-      'updated_at': updatedAt?.toIso8601String(),
     };
+    if (userId != null) {
+      map['user_id'] = userId;
+    }
+    if (updatedAt != null) {
+      map['updated_at'] = updatedAt!.toIso8601String();
+    }
+    return map;
   }
 
   factory Dictionary.fromMap(Map<String, dynamic> map) {
