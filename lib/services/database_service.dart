@@ -130,14 +130,14 @@ class DatabaseService {
 
     final map = maps.first;
     return User(
-      id: map['id'],
-      email: map['email'],
-      name: map['name'],
+      id: map['id'] as String,
+      email: map['email'] as String,
+      name: map['name'] as String,
       settings: UserSettings(
         darkTheme: map['dark_theme'] == 1,
-        interfaceLanguage: map['interface_language'] ?? 'ru',
+        interfaceLanguage: map['interface_language'] as String? ?? 'ru',
         notificationsEnabled: map['notifications_enabled'] == 1,
-        maxNewWordsPerDay: map['max_new_words_per_day'] ?? 10,
+        maxNewWordsPerDay: map['max_new_words_per_day'] as int? ?? 10,
       ),
     );
   }
