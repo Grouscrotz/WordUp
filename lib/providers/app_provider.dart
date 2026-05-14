@@ -242,7 +242,7 @@ class AppProvider with ChangeNotifier {
     final newReviewCount = word.reviewCount + 1;
     
     // Интервалы для 7 этапов повторения
-    final intervals = _settings.repetitionIntervals.intervals;
+    final intervals = _settings.repetitionIntervals;
     int intervalDays;
     
     if (quality < 1) quality = 1;
