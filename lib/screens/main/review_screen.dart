@@ -446,9 +446,9 @@ class _ReviewScreenState extends State<ReviewScreen> {
               ),
               const SizedBox(height: 16),
               
-              // Difficulty selection buttons
+              // Difficulty selection buttons - always visible after reveal
               if (!_isRevealed)
-                const SizedBox(height: 80)
+                const SizedBox.shrink()
               else
                 Column(
                   children: [
@@ -556,7 +556,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
               Row(
                 children: [
                   Icon(
-                    isExpanded ? Icons.chevron_up : Icons.chevron_right,
+                    isExpanded ? Icons.arrow_drop_up : Icons.arrow_right,
                     size: 20,
                     color: Colors.grey.shade600,
                   ),
