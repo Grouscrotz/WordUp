@@ -1,45 +1,38 @@
 ```
-# Build artifacts
-*.o
-*.obj
-*.a
-*.lib
-*.so
-*.dll
-*.dylib
-*.exe
-*.out
-
 # Dependencies
-node_modules/
-venv/
-.venv/
-__pycache__/
-.pytest_cache/
-.mypy_cache/
-target/
-.gradle/
+.pub/
+.dart_tool/
 
-# Logs and temporary files
+# Build artifacts
+build/
+*.apk
+*.aab
+*.app
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Logs
 *.log
-*.tmp
-*.swp
-*.swo
 
-# Environment variables
+# Environment
 .env
 .env.local
 *.env.*
 
-# Editors
+# Editor/IDE
 .vscode/
 .idea/
+*.swp
+*.swo
+*.tmp
 
-# OS generated files
+# OS
 .DS_Store
 Thumbs.db
 
-# Coverage reports
+# Coverage
 coverage/
 htmlcov/
 .coverage
