@@ -17,6 +17,10 @@ void main() async {
   // Инициализация базы данных
   final dbService = DatabaseService();
   await dbService.database;
+  
+  // Очищаем базу данных для пересоздания с новыми данными (для отладки)
+  await dbService.clearDatabase();
+  
   await dbService.initializePresetDictionaries();
   
   runApp(

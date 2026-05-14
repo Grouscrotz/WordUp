@@ -364,7 +364,7 @@ class DatabaseService {
         id: 'preset_1',
         name: 'New General Service List',
         description: 'Базовая лексика английского языка',
-        totalWords: 2800,
+        totalWords: 10,
         learnedWords: 0,
         languageFrom: 'Русский',
         languageTo: 'Английский',
@@ -375,7 +375,7 @@ class DatabaseService {
         id: 'preset_2',
         name: 'Oxford 3000',
         description: '3000 самых важных слов английского языка',
-        totalWords: 3000,
+        totalWords: 10,
         learnedWords: 0,
         languageFrom: 'Русский',
         languageTo: 'Английский',
@@ -386,7 +386,7 @@ class DatabaseService {
         id: 'preset_3',
         name: 'Oxford 5000',
         description: '5000 слов для продвинутого уровня',
-        totalWords: 5000,
+        totalWords: 10,
         learnedWords: 0,
         languageFrom: 'Русский',
         languageTo: 'Английский',
@@ -395,8 +395,41 @@ class DatabaseService {
       ),
     ];
 
+    // Примеры слов для каждого словаря (для демонстрации)
+    final sampleWords = [
+      {'word': 'apple', 'translation': 'яблоко', 'transcription': '/ˈæp.l/'},
+      {'word': 'book', 'translation': 'книга', 'transcription': '/bʊk/'},
+      {'word': 'cat', 'translation': 'кот', 'transcription': '/kæt/'},
+      {'word': 'dog', 'translation': 'собака', 'transcription': '/dɒɡ/'},
+      {'word': 'house', 'translation': 'дом', 'transcription': '/haʊs/'},
+      {'word': 'water', 'translation': 'вода', 'transcription': '/ˈwɔː.tər/'},
+      {'word': 'friend', 'translation': 'друг', 'transcription': '/frend/'},
+      {'word': 'work', 'translation': 'работа', 'transcription': '/wɜːk/'},
+      {'word': 'time', 'translation': 'время', 'transcription': '/taɪm/'},
+      {'word': 'life', 'translation': 'жизнь', 'transcription': '/laɪf/'},
+    ];
+
     for (final dict in presets) {
       await db.insert('dictionaries', dict.toMap(userId: null));
+      
+      // Создаём слова для каждого словаря
+      final words = sampleWords.asMap().entries.map((entry) {
+        final index = entry.key;
+        final data = entry.value;
+        return Word(
+          id: '${dict.id}_word_$index',
+          dictionaryId: dict.id,
+          word: data['word']!,
+          translation: data['translation']!,
+          transcription: data['transcription']!,
+          status: WordStatus.newWord,
+          repetitionCount: 0,
+          nextReview: null,
+          createdAt: now,
+        );
+      }).toList();
+      
+      await createWordsBulk(words);
     }
   }
 }
