@@ -23,6 +23,7 @@ class _LearnScreenState extends State<LearnScreen> {
   bool _isImageRevealed = false;
   bool _isLoading = true;
   List<Word> _words = [];
+  Set<int> _expandedExamples = {}; // Отслеживание раскрытых примеров
   
   // Интервалы повторения в днях для разных уровней сложности
   final Map<String, int> _repetitionIntervals = {
@@ -86,6 +87,7 @@ class _LearnScreenState extends State<LearnScreen> {
         _currentWordIndex++;
         _isRevealed = false;
         _isImageRevealed = false;
+        _expandedExamples.clear(); // Очищаем раскрытые примеры при переходе к следующему слову
       });
     } else {
       _showCompletionDialog();
@@ -98,6 +100,7 @@ class _LearnScreenState extends State<LearnScreen> {
         _currentWordIndex--;
         _isRevealed = false;
         _isImageRevealed = false;
+        _expandedExamples.clear(); // Очищаем раскрытые примеры при переходе к предыдущему слову
       });
     }
   }
@@ -522,11 +525,10 @@ class _LearnScreenState extends State<LearnScreen> {
                                 ),
                                 const SizedBox(height: 8),
                                 
-                                // Example sentences list
-                                _buildExpandableExample(
-                                  currentWord.example!,
-                                  currentWord.word,
-                                ),
+                                // Example sentences list - parse multiple examples separated by semicolon or newline
+                                ..._parseExamples(currentWord.example!).asMap().entries.map((entry) {
+                                  return _buildExampleItem(entry.value, currentWord.word, entry.key);
+                                }),
                               ],
                             ],
                           ),
@@ -763,5 +765,90 @@ class _LearnScreenState extends State<LearnScreen> {
         ),
       ),
     );
+  }
+
+  Widget _buildExampleItem(String example, String word, int index) {
+    // Parse example sentences - they are stored as "english sentence | russian translation"
+    final parts = example.split('|');
+    final englishSentence = parts.length > 0 ? parts[0].trim() : '';
+    final russianTranslation = parts.length > 1 ? parts[1].trim() : '';
+    
+    final isExpanded = _expandedExamples.contains(index);
+    
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: InkWell(
+        onTap: () {
+          setState(() {
+            if (isExpanded) {
+              _expandedExamples.remove(index);
+            } else {
+              _expandedExamples.add(index);
+            }
+          });
+        },
+        borderRadius: BorderRadius.circular(8),
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(
+                    isExpanded ? Icons.chevron_up : Icons.chevron_right,
+                    size: 20,
+                    color: Colors.grey.shade600,
+                  ),
+                  const SizedBox(width: 4),
+                  Expanded(
+                    child: Text(
+                      englishSentence,
+                      style: const TextStyle(
+                        fontSize: 15,
+                        fontFamily: 'Manrope',
+                        color: Colors.black87,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              if (isExpanded) ...[
+                const SizedBox(height: 8),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    russianTranslation,
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontFamily: 'Manrope',
+                      color: Colors.grey.shade700,
+                    ),
+                  ),
+                ),
+              ],
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  List<String> _parseExamples(String examples) {
+    // Split examples by semicolon or newline, then filter out empty strings
+    return examples
+        .split(RegExp(r'[;\n]'))
+        .map((e) => e.trim())
+        .where((e) => e.isNotEmpty)
+        .toList();
   }
 }
