@@ -388,7 +388,7 @@ class _LearnScreenState extends State<LearnScreen> {
                                 ),
                                 const SizedBox(height: 2),
                                 Text(
-                                  '${currentWord.dictionary ?? 'Oxford'} - ${currentWord.category ?? 'A1'}',
+                                  'Oxford - A1',
                                   style: const TextStyle(
                                     fontSize: 14,
                                     color: Colors.grey,
@@ -499,16 +499,26 @@ class _LearnScreenState extends State<LearnScreen> {
                               ),
                               const SizedBox(height: 16),
                               
-                              // Example sentences header
+                              // Example sentences header with eye icon
                               if (currentWord.example != null && currentWord.example!.isNotEmpty) ...[
-                                const Text(
-                                  'Примеры:',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.grey,
-                                    fontFamily: 'Manrope',
-                                  ),
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.visibility_outlined,
+                                      size: 20,
+                                      color: Colors.grey.shade600,
+                                    ),
+                                    const SizedBox(width: 8),
+                                    const Text(
+                                      'Примеры:',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.grey,
+                                        fontFamily: 'Manrope',
+                                      ),
+                                    ),
+                                  ],
                                 ),
                                 const SizedBox(height: 8),
                                 
@@ -721,51 +731,36 @@ class _LearnScreenState extends State<LearnScreen> {
     final englishSentence = parts.length > 0 ? parts[0].trim() : '';
     final russianTranslation = parts.length > 1 ? parts[1].trim() : word;
     
-    return Theme(
-      data: Theme.of(context).copyWith(
-        dividerColor: Colors.transparent,
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+        borderRadius: BorderRadius.circular(8),
       ),
-      child: ExpansionTile(
-        collapsedIconColor: Colors.grey,
-        iconColor: Colors.grey,
-        trailing: const SizedBox.shrink(),
-        leading: const Icon(Icons.chevron_right, size: 24, color: Colors.grey),
-        title: Align(
-          alignment: Alignment.centerLeft,
-          child: _buildHighlightedText(
-            englishSentence,
-            word,
-            const TextStyle(
-              fontSize: 15,
-              fontFamily: 'Manrope',
-              color: Colors.black87,
-            ),
-          ),
-        ),
-        children: [
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Colors.grey[200],
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: _buildHighlightedText(
-                russianTranslation,
-                word,
-                const TextStyle(
-                  fontSize: 14,
-                  fontFamily: 'Manrope',
-                  color: Colors.black87,
-                ),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              englishSentence,
+              style: const TextStyle(
+                fontSize: 15,
+                fontFamily: 'Manrope',
+                color: Colors.black87,
               ),
             ),
-          ),
-        ],
-        expandedAlignment: Alignment.centerLeft,
-        childrenPadding: EdgeInsets.zero,
+            const SizedBox(height: 8),
+            Text(
+              russianTranslation,
+              style: TextStyle(
+                fontSize: 14,
+                fontFamily: 'Manrope',
+                color: Colors.grey.shade700,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

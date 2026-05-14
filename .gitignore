@@ -5,22 +5,28 @@
 *.a
 *.lib
 *.so
-*.dylib
 *.dll
+*.dylib
 *.exe
 *.out
 
 # Dependencies
-.dart_tool/
-.build/
-dist/
+node_modules/
+venv/
+.venv/
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+target/
+.gradle/
 
-# Logs and temp files
+# Logs and temporary files
 *.log
 *.tmp
 *.swp
+*.swo
 
-# Environment
+# Environment variables
 .env
 .env.local
 *.env.*
@@ -28,10 +34,12 @@ dist/
 # Editors
 .vscode/
 .idea/
-*.swp
-*.swo
 
-# Coverage
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Coverage reports
 coverage/
 htmlcov/
 .coverage
@@ -55,8 +63,4 @@ htmlcov/
 *.Z
 *.lz
 *.lzo
-*.tar.gz
-*.tar.bz2
-*.tar.xz
-*.tar.zst
 ```
