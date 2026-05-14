@@ -442,33 +442,62 @@ class _StudyScreenState extends State<StudyScreen> {
   }
 
   void _showCategorySelectionDialog(BuildContext context) {
+    final provider = Provider.of<AppProvider>(context, listen: false);
+    final selectedIds = Set<String>.from(provider.selectedDictionaryIds);
+    
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Выберите словари'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            CheckboxListTile(
-              title: const Text('New General Service List'),
-              value: true,
-              onChanged: (value) {},
-              activeColor: orangeColor,
+      builder: (dialogContext) => StatefulBuilder(
+        builder: (context, setDialogState) => AlertDialog(
+          title: const Text('Выберите словари'),
+          content: SizedBox(
+            width: double.maxFinite,
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: provider.dictionaries.length,
+              itemBuilder: (context, index) {
+                final dictionary = provider.dictionaries[index];
+                final isSelected = selectedIds.contains(dictionary.id);
+                
+                return CheckboxListTile(
+                  title: Text(dictionary.name),
+                  subtitle: Text('${dictionary.languageFrom} → ${dictionary.languageTo}'),
+                  value: isSelected,
+                  onChanged: (value) {
+                    setDialogState(() {
+                      if (value == true) {
+                        selectedIds.add(dictionary.id);
+                      } else {
+                        selectedIds.remove(dictionary.id);
+                      }
+                    });
+                  },
+                  activeColor: orangeColor,
+                );
+              },
             ),
-            CheckboxListTile(
-              title: const Text('Oxford 3000&5000'),
-              value: true,
-              onChanged: (value) {},
-              activeColor: orangeColor,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext),
+              child: const Text('Отмена'),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: orangeColor,
+              ),
+              onPressed: () {
+                // Обновляем выбранные словари в провайдере
+                provider.clearSelectedDictionaries();
+                for (final id in selectedIds) {
+                  provider.toggleDictionarySelection(id);
+                }
+                Navigator.pop(dialogContext);
+              },
+              child: const Text('Сохранить'),
             ),
           ],
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Закрыть'),
-          ),
-        ],
       ),
     );
   }

@@ -45,6 +45,7 @@ class Dictionary {
       'is_preset': isPreset ? 1 : 0,
       'created_at': createdAt.toIso8601String(),
     };
+    // Добавляем user_id только если он не null
     if (userId != null) {
       map['user_id'] = userId;
     }
