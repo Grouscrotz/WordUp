@@ -1,38 +1,46 @@
+```
 # Dependencies
+.pub/
 .dart_tool/
-.build/
-
-# Logs
-*.log
+build/
 
 # Environment
 .env
 .env.local
 *.env.*
 
-# IDE
-.idea/
-.vscode/
-*.swp
-*.swo
+# Logs
+*.log
 
-# OS
+# OS generated files
 .DS_Store
 Thumbs.db
+
+# Temporary files
+*.tmp
+*.swp
+*.swo
 
 # Coverage
 coverage/
 htmlcov/
 .coverage
 
-# Build artifacts
-*.a
-*.dll
-*.exe
-*.obj
-*.so
-*.out
+# IDE
+.vscode/
+.idea/
+
+# Compiled files
+*.pyc
+__pycache__/
 *.class
+*.o
+*.obj
+*.exe
+*.dll
+*.so
+*.a
+*.out
 
 # Compressed files
 *.zip
@@ -57,3 +65,19 @@ htmlcov/
 *.tar.bz2
 *.tar.xz
 *.tar.zst
+
+# MyPy cache
+.mypy_cache/
+# PyTest cache
+.pytest_cache/
+
+# Gradle
+.gradle/
+target/
+
+# Julia
+julia-*/
+
+# Zig
+zig*/
+```

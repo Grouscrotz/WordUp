@@ -7,8 +7,18 @@ import 'screens/main/home_screen.dart';
 import 'screens/main/dictionaries_screen.dart';
 import 'screens/main/study_screen.dart';
 import 'screens/main/settings_screen.dart';
+import 'screens/main/learn_screen.dart';
+import 'screens/main/review_screen.dart';
+import 'services/database_service.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  // Инициализация базы данных
+  final dbService = DatabaseService();
+  await dbService.database;
+  await dbService.initializePresetDictionaries();
+  
   runApp(
     ChangeNotifierProvider(
       create: (_) => AppProvider(),

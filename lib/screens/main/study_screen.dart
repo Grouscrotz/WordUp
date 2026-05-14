@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/app_provider.dart';
+import '../../models/models.dart';
 import 'learn_screen.dart';
 import 'review_screen.dart';
 
@@ -15,13 +16,10 @@ class _StudyScreenState extends State<StudyScreen> {
   final Color orangeColor = const Color(0xFFDAA87D);
   final Color backgroundColor = const Color(0xFFEFEFEF);
   
-  int _selectedCategoriesCount = 2;
-  int _wordsLearnedToday = 3;
-  int _wordsForReview = 5;
-  int _maxWordsPerDay = 10;
-  int _learningStreak = 7;
-  int _recordStreak = 14;
-  int _totalWordsLearned = 156;
+  int _wordsLearnedToday = 0;
+  int _learningStreak = 0;
+  int _recordStreak = 0;
+  int _totalWordsLearned = 0;
 
   int _getCurrentWeekdayIndex() {
     return DateTime.now().weekday - 1; // 0 = Monday, 6 = Sunday
@@ -75,31 +73,50 @@ class _StudyScreenState extends State<StudyScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Выбрано $_selectedCategoriesCount категории',
+                                      '${provider.selectedDictionaryIds.length} выбрано',
                                       style: const TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w500,
                                       ),
                                     ),
                                     const SizedBox(height: 4),
-                                    Text(
-                                      'New General Service List, Oxford 3000&5000',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.grey.shade600,
-                                      ),
+                                    FutureBuilder<List<Dictionary>>(
+                                      future: _getSelectedDictionaries(provider),
+                                      builder: (context, snapshot) {
+                                        if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                                          return Text(
+                                            'Выберите словари для изучения',
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.grey.shade600,
+                                            ),
+                                          );
+                                        }
+                                        final names = snapshot.data!.map((d) => d.name).take(3).join(', ');
+                                        return Text(
+                                          names,
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.grey.shade600,
+                                          ),
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                        );
+                                      },
                                     ),
                                   ],
                                 ),
                               ),
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  _buildSmallDictionaryIcon(Icons.book, Colors.green),
-                                  const SizedBox(width: 8),
-                                  _buildSmallDictionaryIcon(Icons.menu_book, Colors.blue),
-                                ],
-                              ),
+                              if (provider.selectedDictionaryIds.isNotEmpty)
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    _buildSmallDictionaryIcon(Icons.book, Colors.green),
+                                    const SizedBox(width: 8),
+                                    if (provider.selectedDictionaryIds.length > 1)
+                                      _buildSmallDictionaryIcon(Icons.menu_book, Colors.blue),
+                                  ],
+                                ),
                             ],
                           ),
                         ),
@@ -111,12 +128,16 @@ class _StudyScreenState extends State<StudyScreen> {
                     Material(
                       color: Colors.transparent,
                       child: InkWell(
-                        onTap: () {
-                          Navigator.push(
+                        onTap: () async {
+                          if (provider.selectedDictionaryIds.isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Сначала выберите словари для изучения')),
+                            );
+                            return;
+                          }
+                          await Navigator.push(
                             context,
-                            MaterialPageRoute(
-                              builder: (context) => const LearnScreen(mode: 'new'),
-                            ),
+                            MaterialPageRoute(builder: (context) => const LearnScreen()),
                           );
                         },
                         borderRadius: BorderRadius.circular(16),
@@ -139,7 +160,7 @@ class _StudyScreenState extends State<StudyScreen> {
                                     ),
                                     const SizedBox(height: 4),
                                     Text(
-                                      'Выучено сегодня $_wordsLearnedToday из $_maxWordsPerDay',
+                                      'Выучено сегодня $_wordsLearnedToday из ${provider.settings.maxNewWordsPerDay}',
                                       style: TextStyle(
                                         fontSize: 14,
                                         color: Colors.grey.shade600,
@@ -159,12 +180,16 @@ class _StudyScreenState extends State<StudyScreen> {
                     Material(
                       color: Colors.transparent,
                       child: InkWell(
-                        onTap: () {
-                          Navigator.push(
+                        onTap: () async {
+                          if (provider.selectedDictionaryIds.isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Сначала выберите словари для изучения')),
+                            );
+                            return;
+                          }
+                          await Navigator.push(
                             context,
-                            MaterialPageRoute(
-                              builder: (context) => const ReviewScreen(),
-                            ),
+                            MaterialPageRoute(builder: (context) => const ReviewScreen()),
                           );
                         },
                         borderRadius: BorderRadius.circular(16),
@@ -186,12 +211,18 @@ class _StudyScreenState extends State<StudyScreen> {
                                       ),
                                     ),
                                     const SizedBox(height: 4),
-                                    Text(
-                                      'Слов для повторения $_wordsForReview',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.grey.shade600,
-                                      ),
+                                    FutureBuilder<int>(
+                                      future: _getReviewCount(provider),
+                                      builder: (context, snapshot) {
+                                        final count = snapshot.data ?? 0;
+                                        return Text(
+                                          'Слов для повторения: $count',
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.grey.shade600,
+                                          ),
+                                        );
+                                      },
                                     ),
                                   ],
                                 ),
@@ -285,7 +316,7 @@ class _StudyScreenState extends State<StudyScreen> {
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
-                                  '$_wordsLearnedToday / $_maxWordsPerDay',
+                                  '$_wordsLearnedToday / ${provider.settings.maxNewWordsPerDay}',
                                   style: const TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.w600,
@@ -318,6 +349,16 @@ class _StudyScreenState extends State<StudyScreen> {
         ),
       ),
     );
+  }
+
+  Future<List<Dictionary>> _getSelectedDictionaries(AppProvider provider) async {
+    final allDicts = provider.dictionaries;
+    return allDicts.where((d) => provider.selectedDictionaryIds.contains(d.id)).toList();
+  }
+
+  Future<int> _getReviewCount(AppProvider provider) async {
+    final words = await provider.getWordsForReview();
+    return words.length;
   }
 
   Widget _buildSmallDictionaryIcon(IconData icon, Color color) {
