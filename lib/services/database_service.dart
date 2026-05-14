@@ -56,8 +56,7 @@ class DatabaseService {
         language_to TEXT,
         is_preset INTEGER DEFAULT 0,
         created_at TEXT NOT NULL,
-        updated_at TEXT,
-        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+        updated_at TEXT
       )
     ''');
 
