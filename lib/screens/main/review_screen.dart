@@ -1,5 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../providers/app_provider.dart';
+import '../../models/models.dart';
 
+/// Экран повторения слов
+/// На этом этапе пользователь повторяет слова, которые начал учить
+/// Для каждого слова выбирается сложность вспоминания (Сложно/Нормально/Легко)
+/// что определяет интервал до следующего повторения
+/// После 7 успешных повторений слово считается полностью изученным
 class ReviewScreen extends StatefulWidget {
   const ReviewScreen({super.key});
 
@@ -13,61 +21,31 @@ class _ReviewScreenState extends State<ReviewScreen> {
   
   int _currentWordIndex = 0;
   bool _isRevealed = false;
-  bool _isImageRevealed = false;
+  bool _isLoading = true;
+  List<Word> _words = [];
   
-  // Интервалы повторения в днях для разных уровней сложности
-  final Map<String, int> _repetitionIntervals = {
-    'easy': 4,      // Легко - следующий повтор через 4 дня
-    'normal': 2,    // Нормально - через 2 дня
-    'hard': 1,      // Сложно - через 1 день
-  };
+  // Интервалы для 7 этапов повторения (в днях)
+  final List<int> _repetitionIntervals = [1, 2, 4, 7, 14, 30, 60];
   
-  // Пример данных для слов
-  final List<Map<String, dynamic>> _words = [
-    {
-      'word': 'Expensive',
-      'transcription': "[ik'speniv]",
-      'translation': 'дорогой (по цене)',
-      'dictionary': 'Oxford 3000 & 5000',
-      'category': 'А1',
-      'examples': [
-        {'en': 'This car is too expensive for me.', 'ru': 'Эта машина слишком дорогая для меня.'},
-        {'en': 'The restaurant was expensive but good.', 'ru': 'Ресторан был дорогим, но хорошим.'},
-      ],
-    },
-    {
-      'word': 'Beautiful',
-      'transcription': "['bju:tifl]",
-      'translation': 'красивый',
-      'dictionary': 'Oxford 3000 & 5000',
-      'category': 'А2',
-      'examples': [
-        {'en': 'She has a beautiful voice.', 'ru': 'У неё красивый голос.'},
-        {'en': 'The view was beautiful.', 'ru': 'Вид был красивым.'},
-      ],
-    },
-    {
-      'word': 'Interesting',
-      'transcription': "['intristɪŋ]",
-      'translation': 'интересный',
-      'dictionary': 'New General Service List',
-      'category': 'B1',
-      'examples': [
-        {'en': 'This is an interesting book.', 'ru': 'Это интересная книга.'},
-        {'en': 'I find history very interesting.', 'ru': 'Я нахожу историю очень интересной.'},
-      ],
-    },
-  ];
-
-  void _handleDifficultySelection(String difficulty) {
-    debugPrint('Слово "${_words[_currentWordIndex]['word']}" оценено как: $difficulty');
-    debugPrint('Следующее повторение через: ${_repetitionIntervals[difficulty]} дн.');
-    
-    _nextWord();
+  @override
+  void initState() {
+    super.initState();
+    _loadWords();
+  }
+  
+  Future<void> _loadWords() async {
+    setState(() => _isLoading = true);
+    final provider = Provider.of<AppProvider>(context, listen: false);
+    _words = await provider.getWordsForReview();
+    setState(() => _isLoading = false);
   }
 
-  void _sendToReview() {
-    debugPrint('Слово отправлено в конец колоды для повторения');
+  /// Обработать оценку сложности вспоминания
+  /// quality: 1 - сложно, 2 - нормально, 3 - легко
+  void _handleDifficultySelection(int quality) async {
+    final word = _words[_currentWordIndex];
+    final provider = Provider.of<AppProvider>(context, listen: false);
+    await provider.completeReview(word, quality);
     _nextWord();
   }
 
@@ -76,7 +54,6 @@ class _ReviewScreenState extends State<ReviewScreen> {
       setState(() {
         _currentWordIndex++;
         _isRevealed = false;
-        _isImageRevealed = false;
       });
     } else {
       _showCompletionDialog();
@@ -88,10 +65,459 @@ class _ReviewScreenState extends State<ReviewScreen> {
       setState(() {
         _currentWordIndex--;
         _isRevealed = false;
-        _isImageRevealed = false;
       });
     }
   }
+
+  void _showCompletionDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.green.shade100,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Icon(Icons.check_circle, color: Colors.green.shade700, size: 28),
+            ),
+            const SizedBox(width: 12),
+            const Text('Отлично!'),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('Вы завершили эту сессию повторения!'),
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: orangeColor.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Слов повторено',
+                    style: TextStyle(fontSize: 14, color: Colors.grey),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    '${_words.length}',
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Закрыть'),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: orangeColor,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+              Navigator.pop(context);
+            },
+            child: const Text('К обучению', style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_isLoading) {
+      return Scaffold(
+        backgroundColor: backgroundColor,
+        appBar: AppBar(
+          backgroundColor: backgroundColor,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.black),
+            onPressed: () => Navigator.pop(context),
+          ),
+          title: const Text(
+            'Повторение',
+            style: TextStyle(
+              fontSize: 20,
+              fontFamily: 'Roboto',
+              color: Colors.black,
+            ),
+          ),
+          centerTitle: true,
+        ),
+        body: const Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    if (_words.isEmpty) {
+      return Scaffold(
+        backgroundColor: backgroundColor,
+        appBar: AppBar(
+          backgroundColor: backgroundColor,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.black),
+            onPressed: () => Navigator.pop(context),
+          ),
+          title: const Text(
+            'Повторение',
+            style: TextStyle(
+              fontSize: 20,
+              fontFamily: 'Roboto',
+              color: Colors.black,
+            ),
+          ),
+          centerTitle: true,
+        ),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.schedule, size: 80, color: Colors.grey.shade400),
+              const SizedBox(height: 24),
+              const Text(
+                'Нет слов для повторения',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Все слова повторены вовремя!',
+                style: TextStyle(color: Colors.grey.shade600),
+              ),
+              const SizedBox(height: 32),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: orangeColor,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                ),
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Вернуться', style: TextStyle(color: Colors.white)),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    final currentWord = _words[_currentWordIndex];
+    final isLastWord = _currentWordIndex == _words.length - 1;
+    final isFirstWord = _currentWordIndex == 0;
+
+    return Scaffold(
+      backgroundColor: backgroundColor,
+      appBar: AppBar(
+        backgroundColor: backgroundColor,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => Navigator.pop(context),
+        ),
+        title: const Text(
+          'Повторение',
+          style: TextStyle(
+            fontSize: 20,
+            fontFamily: 'Roboto',
+            color: Colors.black,
+          ),
+        ),
+        centerTitle: true,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 16),
+            child: Center(
+              child: Text(
+                '${_currentWordIndex + 1}/${_words.length}',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: orangeColor,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+          child: Column(
+            children: [
+              // Progress bar with back arrow
+              Row(
+                children: [
+                  Expanded(
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        LinearProgressIndicator(
+                          value: (_currentWordIndex + 1) / _words.length,
+                          backgroundColor: Colors.grey.shade300,
+                          valueColor: AlwaysStoppedAnimation<Color>(orangeColor),
+                          minHeight: 4,
+                          borderRadius: BorderRadius.circular(2),
+                        ),
+                      ],
+                    ),
+                  ),
+                  if (!isFirstWord)
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8),
+                      child: GestureDetector(
+                        onTap: _prevWord,
+                        child: Container(
+                          width: 28,
+                          height: 28,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey.shade400, width: 1.5),
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: const Icon(
+                            Icons.arrow_back_rounded,
+                            size: 16,
+                            color: Colors.black54,
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              
+              // Word card
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(24),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Header with repetition info
+                        Row(
+                          children: [
+                            Container(
+                              width: 12,
+                              height: 12,
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade400,
+                                borderRadius: BorderRadius.circular(2),
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Повторение',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey,
+                                    fontFamily: 'Manrope',
+                                  ),
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  'Этап ${currentWord.reviewCount + 1}/7',
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey,
+                                    fontFamily: 'Manrope',
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 24),
+                        
+                        // Word display
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              currentWord.word,
+                              style: const TextStyle(
+                                fontSize: 32,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Roboto',
+                              ),
+                            ),
+                            if (currentWord.transcription != null && currentWord.transcription!.isNotEmpty) ...[
+                              const SizedBox(height: 8),
+                              Text(
+                                currentWord.transcription!,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.grey.shade600,
+                                  fontFamily: 'Manrope',
+                                ),
+                              ),
+                            ],
+                          ],
+                        ),
+                        const SizedBox(height: 24),
+                        
+                        // Reveal button or translation
+                        if (!_isRevealed)
+                          Center(
+                            child: GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  _isRevealed = true;
+                                });
+                              },
+                              child: Container(
+                                width: 80,
+                                height: 80,
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.grey.shade400, width: 2),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: const Icon(
+                                  Icons.visibility_outlined,
+                                  size: 40,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ),
+                          )
+                        else
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Divider(height: 1, thickness: 1),
+                              const SizedBox(height: 16),
+                              Text(
+                                currentWord.translation,
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: 'Roboto',
+                                ),
+                              ),
+                              if (currentWord.example != null && currentWord.example!.isNotEmpty) ...[
+                                const SizedBox(height: 16),
+                                Text(
+                                  'Пример:',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey.shade600,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  currentWord.example!,
+                                  style: const TextStyle(fontSize: 16),
+                                ),
+                              ],
+                            ],
+                          ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              
+              // Difficulty selection buttons
+              if (!_isRevealed)
+                const SizedBox(height: 80)
+              else
+                Column(
+                  children: [
+                    const Text(
+                      'Как хорошо вы вспомнили значение?',
+                      style: TextStyle(fontSize: 14, color: Colors.grey),
+                    ),
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.red.shade400,
+                              foregroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(vertical: 14),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                            ),
+                            onPressed: () => _handleDifficultySelection(1),
+                            child: const Column(
+                              children: [
+                                Text('Сложно', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                                Text('через 1 день', style: TextStyle(fontSize: 11, opacity: 0.8)),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.orange,
+                              foregroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(vertical: 14),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                            ),
+                            onPressed: () => _handleDifficultySelection(2),
+                            child: const Column(
+                              children: [
+                                Text('Нормально', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                                Text('через 2 дня', style: TextStyle(fontSize: 11, opacity: 0.8)),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.green,
+                              foregroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(vertical: 14),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                            ),
+                            onPressed: () => _handleDifficultySelection(3),
+                            child: const Column(
+                              children: [
+                                Text('Легко', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                                Text('через 4 дня', style: TextStyle(fontSize: 11, opacity: 0.8)),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
 
   void _showCompletionDialog() {
     showDialog(
