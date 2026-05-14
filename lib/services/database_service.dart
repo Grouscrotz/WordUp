@@ -423,7 +423,7 @@ class DatabaseService {
           translation: data['translation']!,
           transcription: data['transcription']!,
           status: WordStatus.newWord,
-          repetitionCount: 0,
+          reviewCount: 0,
           nextReview: null,
           createdAt: now,
         );

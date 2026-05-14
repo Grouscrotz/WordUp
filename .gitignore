@@ -1,34 +1,84 @@
-```
-# Build artifacts
-*.dart.js
-*.js
-*.map
-build/
-dist/
+# Compiled and build artifacts
+*.pyc
+__pycache__/
+*.o
+*.obj
+*.class
+*.exe
+*.dll
+*.so
+*.a
+*.out
 
 # Dependencies
-.pub/
-.dart_tool/
-packages/
-
-# Logs
-*.log
-**/logs/
-
-# Environment
+node_modules/
+venv/
+.venv/
 .env
 .env.local
 .env.*
-.local
 
-# IDE
-.vscode/
-.idea/
+# Build outputs
+dist/
+build/
+target/
+*.jar
+*.war
+*.class
+
+# Logs and temp files
+*.log
+*.tmp
 *.swp
 *.swo
-*.tmp
 
-# OS
-.DS_Store
-Thumbs.db
-```
+# Editors
+.vscode/
+.idea/
+
+# Coverage
+coverage/
+htmlcov/
+.coverage
+
+# Python specific
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+.installed.cfg
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.eggs/
+pip-log.txt
+pip-delete-this-directory.txt
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.log
+.git/
+.mypy_cache/
+.pytest_cache/
+.hypothesis/
+
+# Dart/Flutter specific
+.dart_tool/
+.packages
+.pub/
+build/
+*.g.dart
+*.freezed.dart
+
+# Original rules preserved
+*.log
