@@ -20,6 +20,7 @@ class _StudyScreenState extends State<StudyScreen> {
   int _learningStreak = 0;
   int _recordStreak = 0;
   int _totalWordsLearned = 0;
+  int _maxWordsPerDay = 10;
 
   int _getCurrentWeekdayIndex() {
     return DateTime.now().weekday - 1; // 0 = Monday, 6 = Sunday
