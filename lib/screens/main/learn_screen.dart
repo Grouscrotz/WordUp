@@ -175,7 +175,7 @@ class _LearnScreenState extends State<LearnScreen> {
   }
 
   Widget _buildHighlightedText(String text, String word, TextStyle style) {
-    final pattern = RegExp('(${word})', caseSensitive: false);
+    final pattern = RegExp('(${RegExp.escape(word)})', caseSensitive: false);
     final parts = text.split(pattern);
     
     return RichText(
@@ -328,26 +328,25 @@ class _LearnScreenState extends State<LearnScreen> {
                       ],
                     ),
                   ),
-                  if (!isFirstWord)
-                    Padding(
-                      padding: const EdgeInsets.only(left: 12),
-                      child: GestureDetector(
-                        onTap: _prevWord,
-                        child: Container(
-                          width: 32,
-                          height: 32,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey.shade400, width: 1.5),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: const Icon(
-                            Icons.arrow_back_rounded,
-                            size: 18,
-                            color: Colors.black54,
-                          ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 12),
+                    child: GestureDetector(
+                      onTap: isFirstWord ? null : _prevWord,
+                      child: Container(
+                        width: 32,
+                        height: 32,
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey.shade400, width: 1.5),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Icon(
+                          Icons.arrow_back_rounded,
+                          size: 18,
+                          color: isFirstWord ? Colors.grey.shade400 : Colors.black54,
                         ),
                       ),
                     ),
+                  ),
                 ],
               ),
               const SizedBox(height: 24),
@@ -446,7 +445,7 @@ class _LearnScreenState extends State<LearnScreen> {
                             const SizedBox(height: 8),
                             if (currentWord.transcription != null && currentWord.transcription!.isNotEmpty)
                               Text(
-                                currentWord.transcription!,
+                                '[${currentWord.transcription}]',
                                 style: TextStyle(
                                   fontSize: 16,
                                   color: Colors.grey.shade600,
@@ -500,16 +499,25 @@ class _LearnScreenState extends State<LearnScreen> {
                               ),
                               const SizedBox(height: 16),
                               
-                              // Example sentences list
-                              if (currentWord.example != null && currentWord.example!.isNotEmpty)
-                                Padding(
-                                  padding: const EdgeInsets.only(bottom: 8),
-                                  child: _buildExpandableExample(
-                                    currentWord.example!,
-                                    currentWord.translation,
-                                    currentWord.word,
+                              // Example sentences header
+                              if (currentWord.example != null && currentWord.example!.isNotEmpty) ...[
+                                const Text(
+                                  'Примеры:',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.grey,
+                                    fontFamily: 'Manrope',
                                   ),
                                 ),
+                                const SizedBox(height: 8),
+                                
+                                // Example sentences list
+                                _buildExpandableExample(
+                                  currentWord.example!,
+                                  currentWord.word,
+                                ),
+                              ],
                             ],
                           ),
                       ],
@@ -707,7 +715,12 @@ class _LearnScreenState extends State<LearnScreen> {
     );
   }
 
-  Widget _buildExpandableExample(String english, String russian, String word) {
+  Widget _buildExpandableExample(String example, String word) {
+    // Parse example sentences - they are stored as "english sentence | russian translation"
+    final parts = example.split('|');
+    final englishSentence = parts.length > 0 ? parts[0].trim() : '';
+    final russianTranslation = parts.length > 1 ? parts[1].trim() : word;
+    
     return Theme(
       data: Theme.of(context).copyWith(
         dividerColor: Colors.transparent,
@@ -720,7 +733,7 @@ class _LearnScreenState extends State<LearnScreen> {
         title: Align(
           alignment: Alignment.centerLeft,
           child: _buildHighlightedText(
-            english,
+            englishSentence,
             word,
             const TextStyle(
               fontSize: 15,
@@ -740,7 +753,7 @@ class _LearnScreenState extends State<LearnScreen> {
             child: Align(
               alignment: Alignment.centerLeft,
               child: _buildHighlightedText(
-                russian,
+                russianTranslation,
                 word,
                 const TextStyle(
                   fontSize: 14,
