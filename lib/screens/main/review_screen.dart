@@ -446,76 +446,73 @@ class _ReviewScreenState extends State<ReviewScreen> {
               ),
               const SizedBox(height: 16),
               
-              // Difficulty selection buttons - always visible after reveal
-              if (!_isRevealed)
-                const SizedBox.shrink()
-              else
-                Column(
-                  children: [
-                    const Text(
-                      'Как хорошо вы вспомнили значение?',
-                      style: TextStyle(fontSize: 14, color: Colors.grey),
-                    ),
-                    const SizedBox(height: 12),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.red.shade400,
-                              foregroundColor: Colors.white,
-                              padding: const EdgeInsets.symmetric(vertical: 14),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                            ),
-                            onPressed: () => _handleDifficultySelection(1),
-                            child: const Column(
-                              children: [
-                                Text('Сложно', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
-                                Text('через 1 день', style: TextStyle(fontSize: 11, color: Colors.white70)),
-                              ],
-                            ),
+              // Difficulty selection buttons - always visible on review screen
+              Column(
+                children: [
+                  const Text(
+                    'Как хорошо вы вспомнили значение?',
+                    style: TextStyle(fontSize: 14, color: Colors.grey),
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red.shade400,
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          ),
+                          onPressed: _isRevealed ? () => _handleDifficultySelection(1) : null,
+                          child: const Column(
+                            children: [
+                              Text('Сложно', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                              Text('через 1 день', style: TextStyle(fontSize: 11, color: Colors.white70)),
+                            ],
                           ),
                         ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.orange,
-                              foregroundColor: Colors.white,
-                              padding: const EdgeInsets.symmetric(vertical: 14),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                            ),
-                            onPressed: () => _handleDifficultySelection(2),
-                            child: const Column(
-                              children: [
-                                Text('Нормально', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
-                                Text('через 2 дня', style: TextStyle(fontSize: 11, color: Colors.white70)),
-                              ],
-                            ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.orange,
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          ),
+                          onPressed: _isRevealed ? () => _handleDifficultySelection(2) : null,
+                          child: const Column(
+                            children: [
+                              Text('Нормально', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                              Text('через 2 дня', style: TextStyle(fontSize: 11, color: Colors.white70)),
+                            ],
                           ),
                         ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.green,
-                              foregroundColor: Colors.white,
-                              padding: const EdgeInsets.symmetric(vertical: 14),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                            ),
-                            onPressed: () => _handleDifficultySelection(3),
-                            child: const Column(
-                              children: [
-                                Text('Легко', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
-                                Text('через 4 дня', style: TextStyle(fontSize: 11, color: Colors.white70)),
-                              ],
-                            ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.green,
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          ),
+                          onPressed: _isRevealed ? () => _handleDifficultySelection(3) : null,
+                          child: const Column(
+                            children: [
+                              Text('Легко', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                              Text('через 4 дня', style: TextStyle(fontSize: 11, color: Colors.white70)),
+                            ],
                           ),
                         ),
-                      ],
-                    ),
-                  ],
-                ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ],
           ),
         ),

@@ -1,26 +1,27 @@
 ```
 # Build artifacts
+*.class
 *.o
 *.obj
+*.out
 *.exe
 *.dll
 *.so
 *.a
-*.out
 
 # Dependencies
-node_modules/
-venv/
-.venv/
-__pycache__/
-.mypy_cache/
-.pytest_cache/
-target/
-.gradle/
+**/node_modules/
+**/.venv/
+**/venv/
+**/__pycache__/
+**/.mypy_cache/
+**/.pytest_cache/
+**/.gradle/
+**/target/
 
-# Editor/IDE files
-.vscode/
-.idea/
+# IDE files
+**/.vscode/
+**/.idea/
 *.swp
 *.swo
 *.tmp
@@ -59,4 +60,8 @@ htmlcov/
 *.Z
 *.lz
 *.lzo
+*.tar.gz
+*.tar.bz2
+*.tar.xz
+*.tar.zst
 ```
