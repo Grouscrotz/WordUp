@@ -47,7 +47,7 @@ class DatabaseService {
     await db.execute('''
       CREATE TABLE dictionaries (
         id TEXT PRIMARY KEY,
-        user_id TEXT NOT NULL,
+        user_id TEXT,
         name TEXT NOT NULL,
         description TEXT,
         total_words INTEGER DEFAULT 0,
