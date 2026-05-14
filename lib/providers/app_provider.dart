@@ -236,6 +236,57 @@ class AppProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  /// Обработать результат повторения слова с оценкой сложности
+  /// difficulty: 'easy', 'normal', 'hard'
+  Future<void> markWordReviewResult(Word word, String difficulty, int intervalDays) async {
+    final newReviewCount = word.reviewCount + 1;
+    
+    // Преобразуем текстовую оценку в числовую для SM-2 алгоритма
+    int quality;
+    switch (difficulty) {
+      case 'easy':
+        quality = 3;
+        break;
+      case 'normal':
+        quality = 2;
+        break;
+      case 'hard':
+        quality = 1;
+        break;
+      default:
+        quality = 2;
+    }
+    
+    if (newReviewCount >= 7) {
+      // Слово полностью изучено после 7 повторений
+      await _dbService.completeWordLearning(word);
+    } else {
+      final updatedWord = word.copyWith(
+        reviewCount: newReviewCount,
+        nextReview: DateTime.now().add(Duration(days: intervalDays)),
+        lastReviewedAt: DateTime.now(),
+        easeFactor: _calculateEaseFactor(word.easeFactor, quality),
+      );
+      await _dbService.updateWordAfterReview(updatedWord);
+    }
+
+    _totalReviewsCompleted++;
+    notifyListeners();
+  }
+
+  /// Отправить слово в конец колоды для повторения
+  Future<void> sendWordToReview(Word word) async {
+    // Пересоздаем слово с новым ID и отправляем в конец очереди
+    final newWord = word.copyWith(
+      id: '${word.id}_retry_${DateTime.now().millisecondsSinceEpoch}',
+      nextReview: DateTime.now().add(const Duration(minutes: 5)),
+      reviewCount: word.reviewCount,
+    );
+    await _dbService.createWord(newWord);
+    await _dbService.markWordAsKnown(word); // Помечаем старое как известное
+    notifyListeners();
+  }
+
   /// Обработать результат повторения слова
   /// quality: 1 (hard) - сложно, 2 (normal) - нормально, 3 (easy) - легко
   Future<void> completeReview(Word word, int quality) async {
