@@ -800,7 +800,7 @@ class _LearnScreenState extends State<LearnScreen> {
               Row(
                 children: [
                   Icon(
-                    isExpanded ? Icons.chevron_up : Icons.chevron_right,
+                    isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_right,
                     size: 20,
                     color: Colors.grey.shade600,
                   ),

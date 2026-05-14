@@ -397,16 +397,16 @@ class DatabaseService {
 
     // Примеры слов для каждого словаря (для демонстрации)
     final sampleWords = [
-      {'word': 'apple', 'translation': 'яблоко', 'transcription': '/ˈæp.l/'},
-      {'word': 'book', 'translation': 'книга', 'transcription': '/bʊk/'},
-      {'word': 'cat', 'translation': 'кот', 'transcription': '/kæt/'},
-      {'word': 'dog', 'translation': 'собака', 'transcription': '/dɒɡ/'},
-      {'word': 'house', 'translation': 'дом', 'transcription': '/haʊs/'},
-      {'word': 'water', 'translation': 'вода', 'transcription': '/ˈwɔː.tər/'},
-      {'word': 'friend', 'translation': 'друг', 'transcription': '/frend/'},
-      {'word': 'work', 'translation': 'работа', 'transcription': '/wɜːk/'},
-      {'word': 'time', 'translation': 'время', 'transcription': '/taɪm/'},
-      {'word': 'life', 'translation': 'жизнь', 'transcription': '/laɪf/'},
+      {'word': 'apple', 'translation': 'яблоко', 'transcription': '/ˈæp.l/', 'example': 'I ate an apple for breakfast.|Я съел яблоко на завтрак.;This apple is red and juicy.|Это яблоко красное и сочное.'},
+      {'word': 'book', 'translation': 'книга', 'transcription': '/bʊk/', 'example': 'I am reading a book about history.|Я читаю книгу об истории.;She bought a new book yesterday.|Она купила новую книгу вчера.'},
+      {'word': 'cat', 'translation': 'кот', 'transcription': '/kæt/', 'example': 'The cat is sleeping on the sofa.|Кот спит на диване.;My cat likes to play with yarn.|Мой кот любит играть с пряжей.'},
+      {'word': 'dog', 'translation': 'собака', 'transcription': '/dɒɡ/', 'example': 'The dog is barking in the yard.|Собака лает во дворе.;He walks his dog every morning.|Он гуляет со своей собакой каждое утро.'},
+      {'word': 'house', 'translation': 'дом', 'transcription': '/haʊs/', 'example': 'They live in a big house.|Они живут в большом доме.;We painted the house white.|Мы покрасили дом в белый цвет.'},
+      {'word': 'water', 'translation': 'вода', 'transcription': '/ˈwɔː.tər/', 'example': 'Can I have a glass of water?|Можно мне стакан воды?;The water is very cold.|Вода очень холодная.'},
+      {'word': 'friend', 'translation': 'друг', 'transcription': '/frend/', 'example': 'He is my best friend.|Он мой лучший друг.;I met a friend at the cafe.|Я встретил друга в кафе.'},
+      {'word': 'work', 'translation': 'работа', 'transcription': '/wɜːk/', 'example': 'I have a lot of work today.|У меня много работы сегодня.;She goes to work by bus.|Она ездит на работу на автобусе.'},
+      {'word': 'time', 'translation': 'время', 'transcription': '/taɪm/', 'example': 'What time is it now?|Который сейчас час?;I do not have enough time.|У меня недостаточно времени.'},
+      {'word': 'life', 'translation': 'жизнь', 'transcription': '/laɪf/', 'example': 'Life is beautiful.|Жизнь прекрасна.;He changed his life completely.|Он полностью изменил свою жизнь.'},
     ];
 
     for (final dict in presets) {
@@ -422,6 +422,7 @@ class DatabaseService {
           word: data['word']!,
           translation: data['translation']!,
           transcription: data['transcription']!,
+          example: data['example'],
           status: WordStatus.newWord,
           reviewCount: 0,
           nextReview: null,
