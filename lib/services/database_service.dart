@@ -162,8 +162,7 @@ class DatabaseService {
   Future<int> createDictionary(Dictionary dictionary, String userId) async {
     final db = await database;
     return await db.insert('dictionaries', {
-      ...dictionary.toMap(),
-      'user_id': userId,
+      ...dictionary.toMap(userId: userId),
     });
   }
 
@@ -206,11 +205,11 @@ class DatabaseService {
     return Dictionary.fromMap(maps.first);
   }
 
-  Future<int> updateDictionary(Dictionary dictionary) async {
+  Future<int> updateDictionary(Dictionary dictionary, {String? userId}) async {
     final db = await database;
     return await db.update(
       'dictionaries',
-      dictionary.copyWith(updatedAt: DateTime.now()).toMap(),
+      dictionary.copyWith(updatedAt: DateTime.now()).toMap(userId: userId),
       where: 'id = ?',
       whereArgs: [dictionary.id],
     );
@@ -398,7 +397,7 @@ class DatabaseService {
     ];
 
     for (final dict in presets) {
-      await db.insert('dictionaries', dict.toMap());
+      await db.insert('dictionaries', dict.toMap(userId: null));
     }
   }
 }

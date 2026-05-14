@@ -33,9 +33,10 @@ class Dictionary {
     this.updatedAt,
   });
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toMap({String? userId}) {
     return {
       'id': id,
+      'user_id': userId,
       'name': name,
       'description': description,
       'total_words': totalWords,

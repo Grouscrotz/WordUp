@@ -180,7 +180,7 @@ class AppProvider with ChangeNotifier {
     if (dict != null) {
       final allWords = await _dbService.getWordsByDictionaryId(dictionaryId);
       final updatedDict = dict.copyWith(totalWords: allWords.length);
-      await _dbService.updateDictionary(updatedDict);
+      await _dbService.updateDictionary(updatedDict, userId: dict.isPreset ? null : _currentUser?.id);
       await loadDictionaries();
     }
   }
