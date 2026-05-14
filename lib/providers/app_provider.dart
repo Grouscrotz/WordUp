@@ -129,28 +129,23 @@ class AppProvider with ChangeNotifier {
 
   // ==================== Dictionary methods ====================
 
-  Future<void> createDictionary({
-    required String name,
-    required String description,
-    required String languageFrom,
-    required String languageTo,
-  }) async {
+  Future<void> createDictionary(Dictionary dictionary) async {
     if (_currentUser == null) return;
-
-    final dictionary = Dictionary(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
-      name: name,
-      description: description,
-      totalWords: 0,
-      learnedWords: 0,
-      languageFrom: languageFrom,
-      languageTo: languageTo,
-      isPreset: false,
-      createdAt: DateTime.now(),
-    );
 
     await _dbService.createDictionary(dictionary, _currentUser!.id);
     await loadDictionaries();
+  }
+
+  Future<void> updateDictionary(Dictionary dictionary) async {
+    if (_currentUser == null) return;
+
+    await _dbService.updateDictionary(dictionary, userId: _currentUser!.id);
+    await loadDictionaries();
+  }
+
+  Future<List<Dictionary>> getUserDictionaries() async {
+    if (_currentUser == null) return [];
+    return await _dbService.getUserDictionaries(_currentUser!.id);
   }
 
   Future<void> deleteDictionary(String dictionaryId) async {
