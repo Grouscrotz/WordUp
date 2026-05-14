@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/app_provider.dart';
 import 'import_dictionary_screen.dart';
+import 'edit_dictionaries_screen.dart';
 
 class DictionariesScreen extends StatefulWidget {
   const DictionariesScreen({super.key});
@@ -108,23 +109,46 @@ class _DictionariesScreenState extends State<DictionariesScreen> {
                       color: Colors.black,
                     ),
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const ImportDictionaryScreen(),
+                  Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const EditDictionariesScreen(),
+                            ),
+                          );
+                        },
+                        child: Text(
+                          'Редактировать',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontFamily: 'Manrope',
+                            color: orangeColor,
+                          ),
                         ),
-                      );
-                    },
-                    child: Text(
-                      'Импортировать',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontFamily: 'Manrope',
-                        color: orangeColor,
                       ),
-                    ),
+                      const SizedBox(width: 16),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const ImportDictionaryScreen(),
+                            ),
+                          );
+                        },
+                        child: Text(
+                          'Импортировать',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontFamily: 'Manrope',
+                            color: orangeColor,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
